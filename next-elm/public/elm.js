@@ -80,6 +80,87 @@ function A9(fun, a, b, c, d, e, f, g, h, i) {
 console.warn('Compiled in DEV mode. Follow the advice at https://elm-lang.org/0.19.1/optimize for better performance and smaller assets.');
 
 
+var _List_Nil_UNUSED = { $: 0 };
+var _List_Nil = { $: '[]' };
+
+function _List_Cons_UNUSED(hd, tl) { return { $: 1, a: hd, b: tl }; }
+function _List_Cons(hd, tl) { return { $: '::', a: hd, b: tl }; }
+
+
+var _List_cons = F2(_List_Cons);
+
+function _List_fromArray(arr)
+{
+	var out = _List_Nil;
+	for (var i = arr.length; i--; )
+	{
+		out = _List_Cons(arr[i], out);
+	}
+	return out;
+}
+
+function _List_toArray(xs)
+{
+	for (var out = []; xs.b; xs = xs.b) // WHILE_CONS
+	{
+		out.push(xs.a);
+	}
+	return out;
+}
+
+var _List_map2 = F3(function(f, xs, ys)
+{
+	for (var arr = []; xs.b && ys.b; xs = xs.b, ys = ys.b) // WHILE_CONSES
+	{
+		arr.push(A2(f, xs.a, ys.a));
+	}
+	return _List_fromArray(arr);
+});
+
+var _List_map3 = F4(function(f, xs, ys, zs)
+{
+	for (var arr = []; xs.b && ys.b && zs.b; xs = xs.b, ys = ys.b, zs = zs.b) // WHILE_CONSES
+	{
+		arr.push(A3(f, xs.a, ys.a, zs.a));
+	}
+	return _List_fromArray(arr);
+});
+
+var _List_map4 = F5(function(f, ws, xs, ys, zs)
+{
+	for (var arr = []; ws.b && xs.b && ys.b && zs.b; ws = ws.b, xs = xs.b, ys = ys.b, zs = zs.b) // WHILE_CONSES
+	{
+		arr.push(A4(f, ws.a, xs.a, ys.a, zs.a));
+	}
+	return _List_fromArray(arr);
+});
+
+var _List_map5 = F6(function(f, vs, ws, xs, ys, zs)
+{
+	for (var arr = []; vs.b && ws.b && xs.b && ys.b && zs.b; vs = vs.b, ws = ws.b, xs = xs.b, ys = ys.b, zs = zs.b) // WHILE_CONSES
+	{
+		arr.push(A5(f, vs.a, ws.a, xs.a, ys.a, zs.a));
+	}
+	return _List_fromArray(arr);
+});
+
+var _List_sortBy = F2(function(f, xs)
+{
+	return _List_fromArray(_List_toArray(xs).sort(function(a, b) {
+		return _Utils_cmp(f(a), f(b));
+	}));
+});
+
+var _List_sortWith = F2(function(f, xs)
+{
+	return _List_fromArray(_List_toArray(xs).sort(function(a, b) {
+		var ord = A2(f, a, b);
+		return ord === $elm$core$Basics$EQ ? 0 : ord === $elm$core$Basics$LT ? -1 : 1;
+	}));
+});
+
+
+
 var _JsArray_empty = [];
 
 function _JsArray_singleton(value)
@@ -709,87 +790,6 @@ function _Utils_ap(xs, ys)
 	}
 	return root;
 }
-
-
-
-var _List_Nil_UNUSED = { $: 0 };
-var _List_Nil = { $: '[]' };
-
-function _List_Cons_UNUSED(hd, tl) { return { $: 1, a: hd, b: tl }; }
-function _List_Cons(hd, tl) { return { $: '::', a: hd, b: tl }; }
-
-
-var _List_cons = F2(_List_Cons);
-
-function _List_fromArray(arr)
-{
-	var out = _List_Nil;
-	for (var i = arr.length; i--; )
-	{
-		out = _List_Cons(arr[i], out);
-	}
-	return out;
-}
-
-function _List_toArray(xs)
-{
-	for (var out = []; xs.b; xs = xs.b) // WHILE_CONS
-	{
-		out.push(xs.a);
-	}
-	return out;
-}
-
-var _List_map2 = F3(function(f, xs, ys)
-{
-	for (var arr = []; xs.b && ys.b; xs = xs.b, ys = ys.b) // WHILE_CONSES
-	{
-		arr.push(A2(f, xs.a, ys.a));
-	}
-	return _List_fromArray(arr);
-});
-
-var _List_map3 = F4(function(f, xs, ys, zs)
-{
-	for (var arr = []; xs.b && ys.b && zs.b; xs = xs.b, ys = ys.b, zs = zs.b) // WHILE_CONSES
-	{
-		arr.push(A3(f, xs.a, ys.a, zs.a));
-	}
-	return _List_fromArray(arr);
-});
-
-var _List_map4 = F5(function(f, ws, xs, ys, zs)
-{
-	for (var arr = []; ws.b && xs.b && ys.b && zs.b; ws = ws.b, xs = xs.b, ys = ys.b, zs = zs.b) // WHILE_CONSES
-	{
-		arr.push(A4(f, ws.a, xs.a, ys.a, zs.a));
-	}
-	return _List_fromArray(arr);
-});
-
-var _List_map5 = F6(function(f, vs, ws, xs, ys, zs)
-{
-	for (var arr = []; vs.b && ws.b && xs.b && ys.b && zs.b; vs = vs.b, ws = ws.b, xs = xs.b, ys = ys.b, zs = zs.b) // WHILE_CONSES
-	{
-		arr.push(A5(f, vs.a, ws.a, xs.a, ys.a, zs.a));
-	}
-	return _List_fromArray(arr);
-});
-
-var _List_sortBy = F2(function(f, xs)
-{
-	return _List_fromArray(_List_toArray(xs).sort(function(a, b) {
-		return _Utils_cmp(f(a), f(b));
-	}));
-});
-
-var _List_sortWith = F2(function(f, xs)
-{
-	return _List_fromArray(_List_toArray(xs).sort(function(a, b) {
-		var ord = A2(f, a, b);
-		return ord === $elm$core$Basics$EQ ? 0 : ord === $elm$core$Basics$LT ? -1 : 1;
-	}));
-});
 
 
 
@@ -4370,6 +4370,8 @@ function _Browser_load(url)
 		}
 	}));
 }
+var $elm$core$Basics$EQ = {$: 'EQ'};
+var $elm$core$Basics$LT = {$: 'LT'};
 var $elm$core$List$cons = _List_cons;
 var $elm$core$Elm$JsArray$foldr = _JsArray_foldr;
 var $elm$core$Array$foldr = F3(
@@ -4447,19 +4449,11 @@ var $elm$core$Set$toList = function (_v0) {
 	var dict = _v0.a;
 	return $elm$core$Dict$keys(dict);
 };
-var $elm$core$Basics$EQ = {$: 'EQ'};
 var $elm$core$Basics$GT = {$: 'GT'};
-var $elm$core$Basics$LT = {$: 'LT'};
-var $author$project$Main$init = {
-	currentIndex: 0,
-	slides: _List_fromArray(
-		[
-			{imageUrl: 'https://i.imgur.com/41zS5qq.jpeg', title: 'Slide 1'},
-			{imageUrl: 'https://i.imgur.com/5WqZcFu.jpeg', title: 'Slide 2'},
-			{imageUrl: 'https://i.imgur.com/KOCOkNn.jpeg', title: 'Slide 3'},
-			{imageUrl: 'https://i.imgur.com/xzh4FCe.jpeg', title: 'Slide 4'}
-		])
+var $elm$core$Maybe$Just = function (a) {
+	return {$: 'Just', a: a};
 };
+var $elm$core$Maybe$Nothing = {$: 'Nothing'};
 var $elm$core$Result$Err = function (a) {
 	return {$: 'Err', a: a};
 };
@@ -4483,10 +4477,6 @@ var $elm$json$Json$Decode$OneOf = function (a) {
 };
 var $elm$core$Basics$False = {$: 'False'};
 var $elm$core$Basics$add = _Basics_add;
-var $elm$core$Maybe$Just = function (a) {
-	return {$: 'Just', a: a};
-};
-var $elm$core$Maybe$Nothing = {$: 'Nothing'};
 var $elm$core$String$all = _String_all;
 var $elm$core$Basics$and = _Basics_and;
 var $elm$core$Basics$append = _Utils_append;
@@ -4855,6 +4845,8 @@ var $elm$core$Result$isOk = function (result) {
 		return false;
 	}
 };
+var $elm$json$Json$Decode$andThen = _Json_andThen;
+var $elm$json$Json$Decode$bool = _Json_decodeBool;
 var $elm$json$Json$Decode$map = _Json_map1;
 var $elm$json$Json$Decode$map2 = _Json_map2;
 var $elm$json$Json$Decode$succeed = _Json_succeed;
@@ -5168,44 +5160,47 @@ var $elm$core$Task$perform = F2(
 			$elm$core$Task$Perform(
 				A2($elm$core$Task$map, toMessage, task)));
 	});
+var $elm$browser$Browser$element = _Browser_element;
+var $elm$json$Json$Decode$field = _Json_decodeField;
+var $elm$json$Json$Decode$float = _Json_decodeFloat;
+var $elm$json$Json$Decode$list = _Json_decodeList;
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $elm$core$Platform$Sub$batch = _Platform_batch;
 var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
-var $elm$browser$Browser$sandbox = function (impl) {
-	return _Browser_element(
-		{
-			init: function (_v0) {
-				return _Utils_Tuple2(impl.init, $elm$core$Platform$Cmd$none);
-			},
-			subscriptions: function (_v1) {
-				return $elm$core$Platform$Sub$none;
-			},
-			update: F2(
-				function (msg, model) {
-					return _Utils_Tuple2(
-						A2(impl.update, msg, model),
-						$elm$core$Platform$Cmd$none);
-				}),
-			view: impl.view
-		});
-};
-var $author$project$Main$update = F2(
+var $elm$json$Json$Decode$null = _Json_decodeNull;
+var $elm$json$Json$Decode$oneOf = _Json_oneOf;
+var $elm$json$Json$Decode$string = _Json_decodeString;
+var $elm$core$Basics$ge = _Utils_ge;
+var $author$project$Components$Slider$update = F2(
 	function (msg, model) {
 		var count = $elm$core$List$length(model.slides);
-		var newIndex = function () {
-			if (msg.$ === 'Prev') {
-				return (!model.currentIndex) ? (count - 1) : (model.currentIndex - 1);
-			} else {
-				return _Utils_eq(model.currentIndex, count - 1) ? 0 : (model.currentIndex + 1);
-			}
-		}();
-		return _Utils_update(
-			model,
-			{currentIndex: newIndex});
+		var wrap = function (idx) {
+			return (idx < 0) ? (count - 1) : ((_Utils_cmp(idx, count) > -1) ? 0 : idx);
+		};
+		switch (msg.$) {
+			case 'Prev':
+				return _Utils_update(
+					model,
+					{
+						currentIndex: wrap(model.currentIndex - 1)
+					});
+			case 'Next':
+				return _Utils_update(
+					model,
+					{
+						currentIndex: wrap(model.currentIndex + 1)
+					});
+			default:
+				return model;
+		}
 	});
-var $author$project$Main$Next = {$: 'Next'};
-var $author$project$Main$Prev = {$: 'Prev'};
+var $author$project$Components$Slider$Next = {$: 'Next'};
+var $author$project$Components$Slider$Prev = {$: 'Prev'};
+var $author$project$Components$Slider$SlideMsgAt = F2(
+	function (a, b) {
+		return {$: 'SlideMsgAt', a: a, b: b};
+	});
 var $elm$html$Html$button = _VirtualDom_node('button');
 var $elm$json$Json$Encode$string = _Json_wrap;
 var $elm$html$Html$Attributes$stringProperty = F2(
@@ -5238,6 +5233,24 @@ var $elm$core$List$drop = F2(
 			}
 		}
 	});
+var $elm$core$List$maybeCons = F3(
+	function (f, mx, xs) {
+		var _v0 = f(mx);
+		if (_v0.$ === 'Just') {
+			var x = _v0.a;
+			return A2($elm$core$List$cons, x, xs);
+		} else {
+			return xs;
+		}
+	});
+var $elm$core$List$filterMap = F2(
+	function (f, xs) {
+		return A3(
+			$elm$core$List$foldr,
+			$elm$core$List$maybeCons(f),
+			_List_Nil,
+			xs);
+	});
 var $elm$core$List$head = function (list) {
 	if (list.b) {
 		var x = list.a;
@@ -5247,7 +5260,8 @@ var $elm$core$List$head = function (list) {
 		return $elm$core$Maybe$Nothing;
 	}
 };
-var $elm$html$Html$img = _VirtualDom_node('img');
+var $elm$virtual_dom$VirtualDom$map = _VirtualDom_map;
+var $elm$html$Html$map = $elm$virtual_dom$VirtualDom$map;
 var $elm$virtual_dom$VirtualDom$Normal = function (a) {
 	return {$: 'Normal', a: a};
 };
@@ -5265,17 +5279,205 @@ var $elm$html$Html$Events$onClick = function (msg) {
 		'click',
 		$elm$json$Json$Decode$succeed(msg));
 };
+var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
+var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
+var $author$project$Components$Slide$SelectColor = function (a) {
+	return {$: 'SelectColor', a: a};
+};
+var $author$project$Components$Slide$ToggleInner = {$: 'ToggleInner'};
+var $elm$core$String$fromFloat = _String_fromNumber;
+var $elm$html$Html$img = _VirtualDom_node('img');
+var $elm$core$List$isEmpty = function (xs) {
+	if (!xs.b) {
+		return true;
+	} else {
+		return false;
+	}
+};
+var $elm$core$Basics$not = _Basics_not;
+var $elm$html$Html$span = _VirtualDom_node('span');
 var $elm$html$Html$Attributes$src = function (url) {
 	return A2(
 		$elm$html$Html$Attributes$stringProperty,
 		'src',
 		_VirtualDom_noJavaScriptOrHtmlUri(url));
 };
-var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
-var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
-var $author$project$Main$view = function (model) {
-	var currentSlide = $elm$core$List$head(
-		A2($elm$core$List$drop, model.currentIndex, model.slides));
+var $elm$core$Maybe$withDefault = F2(
+	function (_default, maybe) {
+		if (maybe.$ === 'Just') {
+			var value = maybe.a;
+			return value;
+		} else {
+			return _default;
+		}
+	});
+var $author$project$Components$Slide$view = F2(
+	function (productIndex, product) {
+		var titleWithFeatures = _Utils_ap(
+			product.title,
+			$elm$core$List$isEmpty(product.features) ? '' : (' — ' + A2($elm$core$String$join, ', ', product.features)));
+		var selectedColorIndex = 0;
+		var maybeColor = $elm$core$List$head(
+			A2($elm$core$List$drop, selectedColorIndex, product.colors));
+		var badge = function (txt) {
+			return A2(
+				$elm$html$Html$span,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('badge')
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text(txt)
+					]));
+		};
+		return A2(
+			$elm$html$Html$div,
+			_List_fromArray(
+				[
+					$elm$html$Html$Attributes$class('slide')
+				]),
+			_List_fromArray(
+				[
+					product.isNew ? badge('New') : $elm$html$Html$text(''),
+					product.isSet ? badge('Set') : $elm$html$Html$text(''),
+					A2(
+					$elm$html$Html$div,
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$class('slide-title')
+						]),
+					_List_fromArray(
+						[
+							$elm$html$Html$text(titleWithFeatures)
+						])),
+					A2(
+					$elm$html$Html$div,
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$class('slide-price')
+						]),
+					_List_fromArray(
+						[
+							$elm$html$Html$text(
+							'$' + $elm$core$String$fromFloat(product.price))
+						])),
+					function () {
+					var _v0 = _Utils_Tuple2(product.isSet, maybeColor);
+					if (_v0.a) {
+						return A2(
+							$elm$html$Html$img,
+							_List_fromArray(
+								[
+									$elm$html$Html$Attributes$class('slide-image'),
+									$elm$html$Html$Attributes$src(
+									A2($elm$core$Maybe$withDefault, '', product.setImageUrl))
+								]),
+							_List_Nil);
+					} else {
+						if (_v0.b.$ === 'Just') {
+							var color = _v0.b.a;
+							return A2(
+								$elm$html$Html$div,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('image-switcher')
+									]),
+								_List_fromArray(
+									[
+										A2(
+										$elm$html$Html$img,
+										_List_fromArray(
+											[
+												$elm$html$Html$Attributes$src(color.outerUrl),
+												$elm$html$Html$Attributes$class('slide-image')
+											]),
+										_List_Nil),
+										A2(
+										$elm$html$Html$button,
+										_List_fromArray(
+											[
+												$elm$html$Html$Events$onClick($author$project$Components$Slide$ToggleInner),
+												$elm$html$Html$Attributes$class('small-btn')
+											]),
+										_List_fromArray(
+											[
+												$elm$html$Html$text('Switch view')
+											]))
+									]));
+						} else {
+							return $elm$html$Html$text('No image!');
+						}
+					}
+				}(),
+					(!product.isSet) ? A2(
+					$elm$html$Html$div,
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$class('color-swatches')
+						]),
+					A2(
+						$elm$core$List$indexedMap,
+						F2(
+							function (i, c) {
+								return A2(
+									$elm$html$Html$span,
+									_List_fromArray(
+										[
+											$elm$html$Html$Attributes$class(
+											'swatch' + (_Utils_eq(i, selectedColorIndex) ? ' selected' : '')),
+											$elm$html$Html$Events$onClick(
+											$author$project$Components$Slide$SelectColor(i))
+										]),
+									_Utils_ap(
+										_List_fromArray(
+											[
+												$elm$html$Html$text(c.name)
+											]),
+										c.isNew ? _List_fromArray(
+											[
+												badge('New')
+											]) : _List_Nil));
+							}),
+						product.colors)) : $elm$html$Html$text(''),
+					A2(
+					$elm$html$Html$div,
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$class('slide-desc')
+						]),
+					_List_fromArray(
+						[
+							$elm$html$Html$text(product.description)
+						]))
+				]));
+	});
+var $author$project$Components$Slider$view = function (model) {
+	var count = $elm$core$List$length(model.slides);
+	var wrap = function (idx) {
+		return (idx < 0) ? (count - 1) : ((_Utils_cmp(idx, count) > -1) ? 0 : idx);
+	};
+	var indices = _List_fromArray(
+		[
+			wrap(model.currentIndex - 1),
+			model.currentIndex,
+			wrap(model.currentIndex + 1)
+		]);
+	var visibleSlides = A2(
+		$elm$core$List$filterMap,
+		function (i) {
+			return $elm$core$List$head(
+				A2($elm$core$List$drop, i, model.slides));
+		},
+		indices);
+	var slidesWithIdx = A3(
+		$elm$core$List$map2,
+		F2(
+			function (product, idx) {
+				return _Utils_Tuple2(product, idx);
+			}),
+		visibleSlides,
+		indices);
 	return A2(
 		$elm$html$Html$div,
 		_List_fromArray(
@@ -5288,52 +5490,35 @@ var $author$project$Main$view = function (model) {
 				$elm$html$Html$button,
 				_List_fromArray(
 					[
-						$elm$html$Html$Events$onClick($author$project$Main$Prev),
+						$elm$html$Html$Events$onClick($author$project$Components$Slider$Prev),
 						$elm$html$Html$Attributes$class('nav-button')
 					]),
 				_List_fromArray(
 					[
 						$elm$html$Html$text('<')
 					])),
-				function () {
-				if (currentSlide.$ === 'Just') {
-					var slide = currentSlide.a;
-					return A2(
-						$elm$html$Html$div,
-						_List_fromArray(
-							[
-								$elm$html$Html$Attributes$class('slide')
-							]),
-						_List_fromArray(
-							[
-								A2(
-								$elm$html$Html$img,
-								_List_fromArray(
-									[
-										$elm$html$Html$Attributes$class('slide-image'),
-										$elm$html$Html$Attributes$src(slide.imageUrl)
-									]),
-								_List_Nil),
-								A2(
-								$elm$html$Html$div,
-								_List_fromArray(
-									[
-										$elm$html$Html$Attributes$class('slide-title')
-									]),
-								_List_fromArray(
-									[
-										$elm$html$Html$text(slide.title)
-									]))
-							]));
-				} else {
-					return $elm$html$Html$text('No slides!');
-				}
-			}(),
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('slides-wrapper')
+					]),
+				A2(
+					$elm$core$List$map,
+					function (_v0) {
+						var product = _v0.a;
+						var idx = _v0.b;
+						return A2(
+							$elm$html$Html$map,
+							$author$project$Components$Slider$SlideMsgAt(idx),
+							A2($author$project$Components$Slide$view, idx, product));
+					},
+					slidesWithIdx)),
 				A2(
 				$elm$html$Html$button,
 				_List_fromArray(
 					[
-						$elm$html$Html$Events$onClick($author$project$Main$Next),
+						$elm$html$Html$Events$onClick($author$project$Components$Slider$Next),
 						$elm$html$Html$Attributes$class('nav-button')
 					]),
 				_List_fromArray(
@@ -5342,7 +5527,114 @@ var $author$project$Main$view = function (model) {
 					]))
 			]));
 };
-var $author$project$Main$main = $elm$browser$Browser$sandbox(
-	{init: $author$project$Main$init, update: $author$project$Main$update, view: $author$project$Main$view});
+var $author$project$Main$main = $elm$browser$Browser$element(
+	{
+		init: function (flags) {
+			return _Utils_Tuple2(
+				{currentIndex: 0, slides: flags},
+				$elm$core$Platform$Cmd$none);
+		},
+		subscriptions: function (_v0) {
+			return $elm$core$Platform$Sub$none;
+		},
+		update: F2(
+			function (msg, model) {
+				return _Utils_Tuple2(
+					A2($author$project$Components$Slider$update, msg, model),
+					$elm$core$Platform$Cmd$none);
+			}),
+		view: $author$project$Components$Slider$view
+	});
 _Platform_export({'Main':{'init':$author$project$Main$main(
-	$elm$json$Json$Decode$succeed(_Utils_Tuple0))(0)}});}(this));
+	$elm$json$Json$Decode$list(
+		A2(
+			$elm$json$Json$Decode$andThen,
+			function (title) {
+				return A2(
+					$elm$json$Json$Decode$andThen,
+					function (setValue) {
+						return A2(
+							$elm$json$Json$Decode$andThen,
+							function (setImageUrl) {
+								return A2(
+									$elm$json$Json$Decode$andThen,
+									function (price) {
+										return A2(
+											$elm$json$Json$Decode$andThen,
+											function (isSet) {
+												return A2(
+													$elm$json$Json$Decode$andThen,
+													function (isNew) {
+														return A2(
+															$elm$json$Json$Decode$andThen,
+															function (features) {
+																return A2(
+																	$elm$json$Json$Decode$andThen,
+																	function (description) {
+																		return A2(
+																			$elm$json$Json$Decode$andThen,
+																			function (colors) {
+																				return $elm$json$Json$Decode$succeed(
+																					{colors: colors, description: description, features: features, isNew: isNew, isSet: isSet, price: price, setImageUrl: setImageUrl, setValue: setValue, title: title});
+																			},
+																			A2(
+																				$elm$json$Json$Decode$field,
+																				'colors',
+																				$elm$json$Json$Decode$list(
+																					A2(
+																						$elm$json$Json$Decode$andThen,
+																						function (outerUrl) {
+																							return A2(
+																								$elm$json$Json$Decode$andThen,
+																								function (name) {
+																									return A2(
+																										$elm$json$Json$Decode$andThen,
+																										function (isNew) {
+																											return A2(
+																												$elm$json$Json$Decode$andThen,
+																												function (innerUrl) {
+																													return $elm$json$Json$Decode$succeed(
+																														{innerUrl: innerUrl, isNew: isNew, name: name, outerUrl: outerUrl});
+																												},
+																												A2($elm$json$Json$Decode$field, 'innerUrl', $elm$json$Json$Decode$string));
+																										},
+																										A2($elm$json$Json$Decode$field, 'isNew', $elm$json$Json$Decode$bool));
+																								},
+																								A2($elm$json$Json$Decode$field, 'name', $elm$json$Json$Decode$string));
+																						},
+																						A2($elm$json$Json$Decode$field, 'outerUrl', $elm$json$Json$Decode$string)))));
+																	},
+																	A2($elm$json$Json$Decode$field, 'description', $elm$json$Json$Decode$string));
+															},
+															A2(
+																$elm$json$Json$Decode$field,
+																'features',
+																$elm$json$Json$Decode$list($elm$json$Json$Decode$string)));
+													},
+													A2($elm$json$Json$Decode$field, 'isNew', $elm$json$Json$Decode$bool));
+											},
+											A2($elm$json$Json$Decode$field, 'isSet', $elm$json$Json$Decode$bool));
+									},
+									A2($elm$json$Json$Decode$field, 'price', $elm$json$Json$Decode$float));
+							},
+							A2(
+								$elm$json$Json$Decode$field,
+								'setImageUrl',
+								$elm$json$Json$Decode$oneOf(
+									_List_fromArray(
+										[
+											$elm$json$Json$Decode$null($elm$core$Maybe$Nothing),
+											A2($elm$json$Json$Decode$map, $elm$core$Maybe$Just, $elm$json$Json$Decode$string)
+										]))));
+					},
+					A2(
+						$elm$json$Json$Decode$field,
+						'setValue',
+						$elm$json$Json$Decode$oneOf(
+							_List_fromArray(
+								[
+									$elm$json$Json$Decode$null($elm$core$Maybe$Nothing),
+									A2($elm$json$Json$Decode$map, $elm$core$Maybe$Just, $elm$json$Json$Decode$float)
+								]))));
+			},
+			A2($elm$json$Json$Decode$field, 'title', $elm$json$Json$Decode$string))))(0)}});}(this));

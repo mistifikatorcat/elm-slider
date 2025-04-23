@@ -21,13 +21,16 @@
                 "innerUrl": "/images/sneakers-blue-in.png",
                 "isNew": true
             }
-        ]
+        ],
+        "setValue": null,
+        "setImageUrl": null
     },
     {
         "title": "Sweet Gift",
         "price": 249.99,
         "description": "A set of sweet presents. Tasty.",
         "features": [],
+        "colors": [],
         "isNew": false,
         "isSet": true,
         "setImageUrl": "/images/gift-set.png",
@@ -48,7 +51,9 @@
                 "innerUrl": "/images/cinderblock-inside.jpg",
                 "isNew": false
             }
-        ]
+        ],
+        "setValue": null,
+        "setImageUrl": null
     },
     {
         "title": "2001 Honda Civic",
@@ -72,13 +77,16 @@
                 "innerUrl": "/images/honda-in-yellow.jpg",
                 "isNew": true
             }
-        ]
+        ],
+        "setValue": null,
+        "setImageUrl": null
     },
     {
         "title": "Hot Wheels Set",
         "price": 64,
         "description": "20 cars for every taste",
         "features": [],
+        "colors": [],
         "isNew": false,
         "isSet": true,
         "setImageUrl": "/images/hotwheels.png",

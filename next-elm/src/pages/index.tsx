@@ -1,23 +1,48 @@
+// src/pages/index.tsx
 import { useEffect } from 'react'
 import Script from 'next/script'
+import products from '../../public/data/products.json'   // adjust path if needed
 
-export default function Home() {
+type Color = {
+  name: string
+  outerUrl: string
+  innerUrl: string
+  isNew: boolean
+}
+
+type Product = {
+  title: string
+  price: number
+  description: string
+  features: string[]
+  isNew: boolean
+  isSet: boolean
+  setImageUrl?: string
+  setValue?: number
+  colors?: Color[]
+}
+
+export const getStaticProps = async () => ({
+  props: {
+    products: products as Product[]
+  }
+})
+
+export default function Home({ products }: { products: Product[] }) {
   useEffect(() => {
-    // once elm.js has been loaded, window.Elm.Main is available
-    if (typeof window !== 'undefined') {
-      const Elm = (window as any).Elm
-      if (Elm?.Main) {
-        Elm.Main.init({ node: document.getElementById('elm-root')! })
-      }
+    if (typeof window !== 'undefined' && (window as any).Elm?.Main) {
+      ;(window as any).Elm.Main.init({
+        node: document.getElementById('elm-root')!,
+        flags: products
+      })
     }
-    
-  }, [])
+  }, [products])
 
   return (
     <>
-      {/* ensure elm.js is in public/elm.js */}
+      {/* Make sure elm.js was output to public/elm.js by your build script */}
       <Script src="/elm.js" strategy="beforeInteractive" />
-      <div id="elm-root" style={{ minHeight: '200px' }} />
+      <div id="elm-root" style={{ minHeight: '500px' }} />
     </>
   )
 }
