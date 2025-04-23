@@ -11,14 +11,14 @@
         "colors": [
             {
                 "name": "Red",
-                "outerUrl": "/images/sneakers-red-out.png",
-                "innerUrl": "/images/sneakers-red-in.png",
+                "outerUrl": "https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fcdnc.lystit.com%2Fphotos%2F2012%2F01%2F05%2Fgeneric-surplus-red-generic-surplus-mens-mid-deck-leather-sneaker-product-1-2655976-691902627.jpeg&f=1&nofb=1&ipt=4e4e7a83d67427e82c154a331e7de317eb17649b6203bb2f24f9d8e74c64b676",
+                "innerUrl": "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fmedia.gettyimages.com%2Fid%2F1155453198%2Fphoto%2Fred-sneakers.jpg%3Fs%3D612x612%26w%3Dgi%26k%3D20%26c%3Dgojmh8-n0zcOEBAv4rDr0PBWbNeQtdc7dsUgyV36KDo%3D&f=1&nofb=1&ipt=5366d1f865f34d040d5583ec429483358c58391083e6339d2cc512f13133ef54",
                 "isNew": false
             },
             {
                 "name": "Blue",
-                "outerUrl": "/images/sneakers-blue-out.png",
-                "innerUrl": "/images/sneakers-blue-in.png",
+                "outerUrl": "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fc8.alamy.com%2Fcomp%2F2CGJ8Y6%2Fblue-generic-sneakers-isolated-on-white-background-2CGJ8Y6.jpg&f=1&nofb=1&ipt=714abbd8be95b3c2d63d13886e1c383d7e5fee1b9922b19d0bdc7782d8442446",
+                "innerUrl": "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fc8.alamy.com%2Fcomp%2F2DC1CMD%2Fblue-generic-sneakers-isolated-on-white-background-2DC1CMD.jpg&f=1&nofb=1&ipt=d3a8b36f8d337e853d1990463fd5c3ec6b006314ff3c6764e7f640f58c2fce4b",
                 "isNew": true
             }
         ],
@@ -33,7 +33,7 @@
         "colors": [],
         "isNew": false,
         "isSet": true,
-        "setImageUrl": "/images/gift-set.png",
+        "setImageUrl": "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fhendmeid.guru%2Fwp-content%2Fauploads%2F520176%2Ffullsize.jpg&f=1&nofb=1&ipt=753662bbdd3a29c0ba7b40004839497eb98aae4dafafe762d4f13df4558c780f",
         "setValue": 299.99
     },
     {
@@ -47,8 +47,8 @@
         "colors": [
             {
                 "name": "Concrete",
-                "outerUrl": "/images/cinderblock.jpg",
-                "innerUrl": "/images/cinderblock-inside.jpg",
+                "outerUrl": "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fhousing.com%2Fnews%2Fwp-content%2Fuploads%2F2023%2F02%2FCMU-Blocks-8-CMU-8X8X16.jpg&f=1&nofb=1&ipt=b29b2182f1dd09cf08c66531ee857b07f8171c35c3c064eaed0af1bd63e4f51d",
+                "innerUrl": "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fimages.homedepot-static.com%2FproductImages%2F04644eef-167b-44f8-a2a5-8d289687f10a%2Fsvn%2Fcinder-blocks-32311352-64_300.jpg&f=1&nofb=1&ipt=c3502f8e2fca887b9785c62485edaae590b01370c463d2eebb3c0033d77cda7a",
                 "isNew": false
             }
         ],
@@ -67,14 +67,14 @@
         "colors": [
             {
                 "name": "Silver",
-                "outerUrl": "/images/honda-in.jpg",
-                "innerUrl": "/images/honda-put.jpg",
+                "outerUrl": "https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fstatic.cargurus.com%2Fimages%2Fsite%2F2012%2F10%2F02%2F12%2F17%2F2001_honda_civic_dx_coupe-pic-7162605675879861780.jpeg&f=1&nofb=1&ipt=913495f7fc2236e41c01a9f181a8568d2d43bfeb41706bd922994aef6db1984f",
+                "innerUrl": "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse3.mm.bing.net%2Fth%3Fid%3DOIP.j7zoyZeYWBojfkhSutR-vQAAAA%26pid%3DApi&f=1&ipt=4f4631abf715dd30cee5e9adb15f8f683a4faf2ea309e2c033c34009d96935dd",
                 "isNew": false
             },
             {
                 "name": "Yellow",
-                "outerUrl": "/images/honda-out-yellow.jpg",
-                "innerUrl": "/images/honda-in-yellow.jpg",
+                "outerUrl": "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.carsinvasion.com%2Fgallery%2F2001-honda-civic-si-concept%2F2001-honda-civic-si-concept-04.jpg&f=1&nofb=1&ipt=08dd039c91ff6757b016caa0ab15ecf34d7efaba79616485e3f8bda18e496bc8",
+                "innerUrl": "https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fs1.cdn.autoevolution.com%2Fimages%2Fgallery%2FHONDACivicType-R-3014_8.jpg&f=1&nofb=1&ipt=31d290519268e0bb804d34a9d63659102583a2cd32fcc25c8e04cdb26ae8e39a",
                 "isNew": true
             }
         ],
@@ -89,7 +89,7 @@
         "colors": [],
         "isNew": false,
         "isSet": true,
-        "setImageUrl": "/images/hotwheels.png",
+        "setImageUrl": "https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fi.ytimg.com%2Fvi%2F5sha3VV_-eE%2Fmaxresdefault.jpg&f=1&nofb=1&ipt=d16df52e05a60e46e4bd9789308c118078ea7b8c733f592c6530b3fe706826f3",
         "setValue": 128
     }
 ]
