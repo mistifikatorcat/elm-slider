@@ -35,6 +35,39 @@ a {
   text-decoration: none;
 }
 
+
+.slider-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 2rem 0;
+}
+
+.slide {
+  margin: 0 1rem;
+  text-align: center;
+}
+
+.slide-image {
+  width: 300px;
+  height: auto;
+  border-radius: 8px;
+}
+
+.slide-title {
+  margin-top: 0.5rem;
+  font-weight: bold;
+}
+
+.nav-button {
+  background: none;
+  border: none;
+  font-size: 2rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;

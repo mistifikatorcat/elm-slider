@@ -3,11 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "elm:make": "elm make src/Main.elm --output=public/elm.js",
+    "watch:elm": "elm-live src/Main.elm --dir=public --pushstate -- --output=public/elm.js",
+    "dev": "concurrently \"npm run watch:elm\" \"next dev\"",
+    "build": "npm run elm:make && next build",
+    "start": "next start"
   },
+
   "dependencies": {
     "next": "15.3.1",
     "react": "^19.0.0",
