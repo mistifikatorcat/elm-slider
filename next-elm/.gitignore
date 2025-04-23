@@ -10,6 +10,9 @@
 !.yarn/releases
 !.yarn/versions
 
+#elm-stuff
+/elm-stuff
+
 # testing
 /coverage
 
