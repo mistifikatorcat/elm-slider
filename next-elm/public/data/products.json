@@ -1,0 +1,87 @@
+[
+    {
+        "title": "Cool Sneakers",
+        "price": 99.99,
+        "description": "High-top comfort meets street style. Blue is different, though.",
+        "features": [
+            ""
+        ],
+        "isNew": true,
+        "isSet": false,
+        "colors": [
+            {
+                "name": "Red",
+                "outerUrl": "/images/sneakers-red-out.png",
+                "innerUrl": "/images/sneakers-red-in.png",
+                "isNew": false
+            },
+            {
+                "name": "Blue",
+                "outerUrl": "/images/sneakers-blue-out.png",
+                "innerUrl": "/images/sneakers-blue-in.png",
+                "isNew": true
+            }
+        ]
+    },
+    {
+        "title": "Sweet Gift",
+        "price": 249.99,
+        "description": "A set of sweet presents. Tasty.",
+        "features": [],
+        "isNew": false,
+        "isSet": true,
+        "setImageUrl": "/images/gift-set.png",
+        "setValue": 299.99
+    },
+    {
+        "title": "Cinder block",
+        "price": 200,
+        "description": "Every big thing starts with something small. Or not.",
+        "features": [
+        ],
+        "isNew": false,
+        "isSet": false,
+        "colors": [
+            {
+                "name": "Concrete",
+                "outerUrl": "/images/cinderblock.jpg",
+                "innerUrl": "/images/cinderblock-inside.jpg",
+                "isNew": false
+            }
+        ]
+    },
+    {
+        "title": "2001 Honda Civic",
+        "price": 6000,
+        "description": "Pretty nice car",
+        "features": [
+            "Heated cupholders"
+        ],
+        "isNew": true,
+        "isSet": false,
+        "colors": [
+            {
+                "name": "Silver",
+                "outerUrl": "/images/honda-in.jpg",
+                "innerUrl": "/images/honda-put.jpg",
+                "isNew": false
+            },
+            {
+                "name": "Yellow",
+                "outerUrl": "/images/honda-out-yellow.jpg",
+                "innerUrl": "/images/honda-in-yellow.jpg",
+                "isNew": true
+            }
+        ]
+    },
+    {
+        "title": "Hot Wheels Set",
+        "price": 64,
+        "description": "20 cars for every taste",
+        "features": [],
+        "isNew": false,
+        "isSet": true,
+        "setImageUrl": "/images/hotwheels.png",
+        "setValue": 128
+    }
+]
