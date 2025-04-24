@@ -7,7 +7,7 @@ body {
 
 body {
   color: var(--foreground);
-  background: var(--background);
+  background-color: rgb(236, 249, 255);
   font-family: Arial, Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -32,9 +32,6 @@ a {
   margin: 2rem 0;
 }
 
-.slide {
-  margin: 0 1rem;
-}
 
 .slide-image {
   width: 300px;
@@ -78,7 +75,6 @@ a {
   display: flex;
   justify-content: center;
   gap: 1rem;
-  overflow: hidden;    /* optional: hides anything outside the three slides */
 }
 
 /* Individual slide */
