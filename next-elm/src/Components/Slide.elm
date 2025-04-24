@@ -4,87 +4,107 @@ import Html exposing (Html, button, div, img, span, text)
 import Html.Attributes exposing (class, src)
 import Html.Events exposing (onClick)
 import Maybe exposing (withDefault)
-import List exposing (head, indexedMap)
+import List exposing (head)
 import Config.Products exposing (Product)
 
 
--- Slide-specific messages
-
+-- Messages we handle per slide
 type SlideMsg
     = SelectColor Int
     | ToggleInner
 
 
--- VIEW: Boolean flag picks outer vs inner image
-view : Bool -> Int -> Product -> Html SlideMsg
-view isInner productIndex product =
+{-|
+   view isInner selectedIdx slideIndex product
+
+   * isInner     : Bool, show innerUrl if True, outerUrl if False
+   * selectedIdx : Int, which color swatch index to show
+   * slideIndex  : Int, for Html.map context
+   * product     : Product record
+-}
+view : Bool -> Int -> Int -> Product -> Html SlideMsg
+view isInner selectedIdx _ product =
     let
-        -- Determine the correct image URL
+        -- unwrap the Maybe String for set-image
         setUrl : String
         setUrl =
             withDefault "" product.setImageUrl
 
+        -- pick the color record at selectedIdx
         maybeColor =
-            head product.colors
+            head (List.drop selectedIdx product.colors)
 
-        imageUrl : String
-        imageUrl =
-            if product.isSet then
-                setUrl
-            else
-                case maybeColor of
-                    Just c -> if isInner then c.innerUrl else c.outerUrl
-                    Nothing -> ""
-
+        -- build exactly one <img> element
         imageElement : Html SlideMsg
         imageElement =
-            if imageUrl /= "" then
-                img [ src imageUrl, class "slide-image" ] []
-            else
-                text "No image!"
-
-        badges : List (Html SlideMsg)
-        badges =
-            (if product.isNew then
-                 [ span [ class "badge" ] [ text "New" ] ]
-             else
-                 []
-            )
-            ++ (if product.isSet then
-                    [ span [ class "badge" ] [ text "Set" ] ]
+            if product.isSet then
+                -- Show the set image always, ignoring swatches
+                if setUrl /= "" then
+                    img [ src setUrl, class "slide-image" ] []
                 else
-                    []
-               )
+                    text "No image!"
+
+            else
+                -- Non-set: show outer or inner based on isInner
+                case maybeColor of
+                    Just c ->
+                        let
+                            urlToShow =
+                                if isInner then
+                                    c.innerUrl
+                                else
+                                    c.outerUrl
+                        in
+                        img [ src urlToShow, class "slide-image" ] []
+
+                    Nothing ->
+                        text "No image!"
     in
     div [ class "slide" ]
-        [ -- Image + toggle button
+        [ -- IMAGE + hover-toggle button
           div [ class "slide-image-wrapper" ]
             [ imageElement
             , button [ onClick ToggleInner, class "slide-toggle" ] [ text "⟳" ]
             ]
 
-          -- Content block with badges above title
+          -- CONTENT BELOW THE IMAGE
         , div [ class "slide-content" ]
-            ( badges
-              ++ [ div [ class "slide-title" ] [ text product.title ]
-                 , div [ class "slide-price" ] [ text ("$" ++ String.fromFloat product.price) ]
-                 ]
-              ++ (if not product.isSet then
-                     [ div [ class "color-swatches" ]
-                         (indexedMap
-                             (\i c ->
+            (  -- Badges row
+               (if product.isNew then
+                    [ span [ class "badge" ] [ text "New" ] ]
+                else
+                    []
+               )
+             ++ (if product.isSet then
+                    [ span [ class "badge" ] [ text "Set" ] ]
+                else
+                    []
+                )
+
+             -- Title & price
+             ++ [ div [ class "slide-title" ] [ text product.title ]
+                , div [ class "slide-price" ] [ text ("$" ++ String.fromFloat product.price) ]
+                ]
+
+             -- Color swatches (only for non-set)
+             ++ (if not product.isSet then
+                    [ div [ class "color-swatches" ]
+                        (List.indexedMap
+                            (\i c ->
                                 span
-                                    [ class ("swatch" ++ if i == productIndex then " selected" else "")
+                                    [ class ("swatch" ++ if i == selectedIdx then " selected" else "")
                                     , onClick (SelectColor i)
                                     ]
                                     [ text c.name ]
-                             )
-                             product.colors
-                         )
-                     ]
-                  else
-                     []
-                 )
-              ++ [ div [ class "slide-desc" ] [ text product.description ] ]
+                            )
+                            product.colors
+                        )
+                    ]
+                else
+                    []
+                )
+
+             -- Description
+             ++ [ div [ class "slide-desc" ] [ text product.description ] ]
             )
         ]
