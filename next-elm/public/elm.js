@@ -5204,15 +5204,15 @@ var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
 var $elm$json$Json$Decode$null = _Json_decodeNull;
 var $elm$json$Json$Decode$oneOf = _Json_oneOf;
 var $elm$json$Json$Decode$string = _Json_decodeString;
-var $elm$core$Basics$ge = _Utils_ge;
+var $elm$core$Basics$min = F2(
+	function (x, y) {
+		return (_Utils_cmp(x, y) < 0) ? x : y;
+	});
 var $elm$core$Basics$not = _Basics_not;
 var $author$project$Components$Slider$update = F2(
 	function (msg, model) {
-		var wrap = function (idx) {
-			return (idx < 0) ? ($elm$core$List$length(model.slides) - 1) : ((_Utils_cmp(
-				idx,
-				$elm$core$List$length(model.slides)) > -1) ? 0 : idx);
-		};
+		var visibleCount = 3;
+		var total = $elm$core$List$length(model.slides);
 		var toggleAt = function (idx) {
 			return A2(
 				$elm$core$List$indexedMap,
@@ -5222,19 +5222,17 @@ var $author$project$Components$Slider$update = F2(
 					}),
 				model.innerStates);
 		};
+		var clampPrev = A2($elm$core$Basics$max, 0, model.currentIndex - 1);
+		var clampNext = A2($elm$core$Basics$min, total - visibleCount, model.currentIndex + 1);
 		switch (msg.$) {
 			case 'Prev':
 				return _Utils_update(
 					model,
-					{
-						currentIndex: wrap(model.currentIndex - 1)
-					});
+					{currentIndex: clampPrev});
 			case 'Next':
 				return _Utils_update(
 					model,
-					{
-						currentIndex: wrap(model.currentIndex + 1)
-					});
+					{currentIndex: clampNext});
 			default:
 				var idx = msg.a;
 				var slideMsg = msg.b;
@@ -5315,6 +5313,132 @@ var $elm$html$Html$Events$onClick = function (msg) {
 		'click',
 		$elm$json$Json$Decode$succeed(msg));
 };
+var $elm$core$List$takeReverse = F3(
+	function (n, list, kept) {
+		takeReverse:
+		while (true) {
+			if (n <= 0) {
+				return kept;
+			} else {
+				if (!list.b) {
+					return kept;
+				} else {
+					var x = list.a;
+					var xs = list.b;
+					var $temp$n = n - 1,
+						$temp$list = xs,
+						$temp$kept = A2($elm$core$List$cons, x, kept);
+					n = $temp$n;
+					list = $temp$list;
+					kept = $temp$kept;
+					continue takeReverse;
+				}
+			}
+		}
+	});
+var $elm$core$List$takeTailRec = F2(
+	function (n, list) {
+		return $elm$core$List$reverse(
+			A3($elm$core$List$takeReverse, n, list, _List_Nil));
+	});
+var $elm$core$List$takeFast = F3(
+	function (ctr, n, list) {
+		if (n <= 0) {
+			return _List_Nil;
+		} else {
+			var _v0 = _Utils_Tuple2(n, list);
+			_v0$1:
+			while (true) {
+				_v0$5:
+				while (true) {
+					if (!_v0.b.b) {
+						return list;
+					} else {
+						if (_v0.b.b.b) {
+							switch (_v0.a) {
+								case 1:
+									break _v0$1;
+								case 2:
+									var _v2 = _v0.b;
+									var x = _v2.a;
+									var _v3 = _v2.b;
+									var y = _v3.a;
+									return _List_fromArray(
+										[x, y]);
+								case 3:
+									if (_v0.b.b.b.b) {
+										var _v4 = _v0.b;
+										var x = _v4.a;
+										var _v5 = _v4.b;
+										var y = _v5.a;
+										var _v6 = _v5.b;
+										var z = _v6.a;
+										return _List_fromArray(
+											[x, y, z]);
+									} else {
+										break _v0$5;
+									}
+								default:
+									if (_v0.b.b.b.b && _v0.b.b.b.b.b) {
+										var _v7 = _v0.b;
+										var x = _v7.a;
+										var _v8 = _v7.b;
+										var y = _v8.a;
+										var _v9 = _v8.b;
+										var z = _v9.a;
+										var _v10 = _v9.b;
+										var w = _v10.a;
+										var tl = _v10.b;
+										return (ctr > 1000) ? A2(
+											$elm$core$List$cons,
+											x,
+											A2(
+												$elm$core$List$cons,
+												y,
+												A2(
+													$elm$core$List$cons,
+													z,
+													A2(
+														$elm$core$List$cons,
+														w,
+														A2($elm$core$List$takeTailRec, n - 4, tl))))) : A2(
+											$elm$core$List$cons,
+											x,
+											A2(
+												$elm$core$List$cons,
+												y,
+												A2(
+													$elm$core$List$cons,
+													z,
+													A2(
+														$elm$core$List$cons,
+														w,
+														A3($elm$core$List$takeFast, ctr + 1, n - 4, tl)))));
+									} else {
+										break _v0$5;
+									}
+							}
+						} else {
+							if (_v0.a === 1) {
+								break _v0$1;
+							} else {
+								break _v0$5;
+							}
+						}
+					}
+				}
+				return list;
+			}
+			var _v1 = _v0.b;
+			var x = _v1.a;
+			return _List_fromArray(
+				[x]);
+		}
+	});
+var $elm$core$List$take = F2(
+	function (n, list) {
+		return A3($elm$core$List$takeFast, 0, n, list);
+	});
 var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
 var $author$project$Components$Slide$SelectColor = function (a) {
@@ -5518,72 +5642,82 @@ var $author$project$Components$Slide$view = F3(
 				]));
 	});
 var $author$project$Components$Slider$view = function (model) {
-	var visibleSlides = A2($elm$core$List$drop, model.currentIndex, model.slides);
-	var indices = A2(
-		$elm$core$List$range,
-		0,
-		$elm$core$List$length(visibleSlides) - 1);
-	var slidesWithIdx = A3(
-		$elm$core$List$map2,
+	var visibleCount = 3;
+	var visible = A2(
+		$elm$core$List$take,
+		visibleCount,
+		A2($elm$core$List$drop, model.currentIndex, model.slides));
+	var total = $elm$core$List$length(model.slides);
+	var slidesWithIdx = A2(
+		$elm$core$List$indexedMap,
 		F2(
-			function (product, idx) {
-				return _Utils_Tuple2(product, idx);
+			function (i, p) {
+				return _Utils_Tuple2(p, i + model.currentIndex);
 			}),
-		visibleSlides,
-		indices);
+		visible);
+	var canPrev = model.currentIndex > 0;
+	var canNext = _Utils_cmp(model.currentIndex + visibleCount, total) < 0;
 	return A2(
 		$elm$html$Html$div,
 		_List_fromArray(
 			[
 				$elm$html$Html$Attributes$class('slider-container')
 			]),
-		_List_fromArray(
-			[
-				A2(
-				$elm$html$Html$button,
+		_Utils_ap(
+			canPrev ? _List_fromArray(
+				[
+					A2(
+					$elm$html$Html$button,
+					_List_fromArray(
+						[
+							$elm$html$Html$Events$onClick($author$project$Components$Slider$Prev),
+							$elm$html$Html$Attributes$class('nav-button')
+						]),
+					_List_fromArray(
+						[
+							$elm$html$Html$text('<')
+						]))
+				]) : _List_Nil,
+			_Utils_ap(
 				_List_fromArray(
 					[
-						$elm$html$Html$Events$onClick($author$project$Components$Slider$Prev),
-						$elm$html$Html$Attributes$class('nav-button')
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('slides-wrapper')
+							]),
+						A2(
+							$elm$core$List$map,
+							function (_v0) {
+								var product = _v0.a;
+								var idx = _v0.b;
+								var isInner = A2(
+									$elm$core$Maybe$withDefault,
+									false,
+									$elm$core$List$head(
+										A2($elm$core$List$drop, idx, model.innerStates)));
+								return A2(
+									$elm$html$Html$map,
+									$author$project$Components$Slider$SlideMsgAt(idx),
+									A3($author$project$Components$Slide$view, isInner, idx, product));
+							},
+							slidesWithIdx))
 					]),
-				_List_fromArray(
+				canNext ? _List_fromArray(
 					[
-						$elm$html$Html$text('<')
-					])),
-				A2(
-				$elm$html$Html$div,
-				_List_fromArray(
-					[
-						$elm$html$Html$Attributes$class('slides-wrapper')
-					]),
-				A2(
-					$elm$core$List$map,
-					function (_v0) {
-						var product = _v0.a;
-						var idx = _v0.b;
-						var isInner = A2(
-							$elm$core$Maybe$withDefault,
-							false,
-							$elm$core$List$head(
-								A2($elm$core$List$drop, idx, model.innerStates)));
-						return A2(
-							$elm$html$Html$map,
-							$author$project$Components$Slider$SlideMsgAt(idx),
-							A3($author$project$Components$Slide$view, isInner, idx, product));
-					},
-					slidesWithIdx)),
-				A2(
-				$elm$html$Html$button,
-				_List_fromArray(
-					[
-						$elm$html$Html$Events$onClick($author$project$Components$Slider$Next),
-						$elm$html$Html$Attributes$class('nav-button')
-					]),
-				_List_fromArray(
-					[
-						$elm$html$Html$text('>')
-					]))
-			]));
+						A2(
+						$elm$html$Html$button,
+						_List_fromArray(
+							[
+								$elm$html$Html$Events$onClick($author$project$Components$Slider$Next),
+								$elm$html$Html$Attributes$class('nav-button')
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text('>')
+							]))
+					]) : _List_Nil)));
 };
 var $author$project$Main$main = $elm$browser$Browser$element(
 	{

@@ -1,21 +1,31 @@
 /* Slider wrapper, track & arrows */
 
 .slider-container {
-    position: relative;
-    padding: 2rem 1rem;
-    overflow: hidden;
-  }
-  
-  .slides-wrapper {
-    display: flex;
-    gap: 1.5rem;
-    overflow-x: hidden;
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: visible;
+    scroll-behavior: smooth;
     scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
+  
+    /* hide scrollbar */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .slider-container::-webkit-scrollbar {
+    display: none;
   }
   
+  /* Grid track: always 3 slides per view */
+  .slides-wrapper {
+    display: grid;
+    grid-auto-flow: column dense;
+    gap: 0.5rem; /* adjust gutter between slides */
+    /* subtract two gutters (gap * (3–1)) then split into 3 columns */
+    grid-auto-columns: calc((100% - (0.5rem * 2)) / 3);
+  }
+  
+  /* Snap each slide to the start of the viewport */
   .slides-wrapper > * {
-    flex: 0 0 calc((100% - (1.5rem * 2)) / 3);
     scroll-snap-align: start;
   }
   
