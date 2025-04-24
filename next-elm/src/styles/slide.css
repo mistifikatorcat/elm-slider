@@ -8,18 +8,22 @@
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    height: 100%;
 
   }
   
   /* Image wrapper & hover toggle */
   .slider-container .slide-image-wrapper {
     position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1;     /* forces a 1:1 box—change to 16/9 or other if you prefer */
+    overflow: hidden;
   }
   .slider-container .slide-image-wrapper .slide-image {
     width: 100%;
     max-width: 400px;
     display: block;
-    object-fit: contain;
+    object-fit: cover;
   }
   .slider-container .slide-image-wrapper .slide-toggle {
     position: absolute;
@@ -40,13 +44,17 @@
     opacity: 1;
   }
   
-  /* Text content below */
   .slider-container .slide-content {
-    /* padding: 1rem; */
     display: flex;
     flex-direction: column;
-    gap: .5rem;
-    align-items: flex-start;
+    /* if you had padding, keep it here */
+    padding: 1rem;
+    gap: 0.5rem;
+  }
+  
+  /* Push the description to the bottom of that flex container */
+  .slider-container .slide-content .slide-desc {
+    margin-top: auto;
   }
   
   /* Badges */
@@ -57,6 +65,9 @@
     /* padding: .2rem .4rem; */
     border-radius: 2px;
     align-self: flex-start;
+  }
+  .slider-container .badge.placeholder {
+    visibility: hidden;
   }
   
   /* Titles & prices */

@@ -5558,7 +5558,16 @@ var $author$project$Components$Slide$view = F4(
 									[
 										$elm$html$Html$text('New')
 									]))
-							]) : _List_Nil,
+							]) : _List_fromArray(
+							[
+								A2(
+								$elm$html$Html$span,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('badge placeholder')
+									]),
+								_List_Nil)
+							]),
 						_Utils_ap(
 							product.isSet ? _List_fromArray(
 								[
@@ -5572,7 +5581,16 @@ var $author$project$Components$Slide$view = F4(
 										[
 											$elm$html$Html$text('Set')
 										]))
-								]) : _List_Nil,
+								]) : _List_fromArray(
+								[
+									A2(
+									$elm$html$Html$span,
+									_List_fromArray(
+										[
+											$elm$html$Html$Attributes$class('badge placeholder')
+										]),
+									_List_Nil)
+								]),
 							_Utils_ap(
 								_List_fromArray(
 									[

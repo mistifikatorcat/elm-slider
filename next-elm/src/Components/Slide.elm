@@ -73,12 +73,12 @@ view isInner selectedIdx _ product =
                (if product.isNew then
                     [ span [ class "badge" ] [ text "New" ] ]
                 else
-                    []
+                    [span [ class "badge placeholder" ] []]
                )
              ++ (if product.isSet then
                     [ span [ class "badge" ] [ text "Set" ] ]
                 else
-                    []
+                    [span [ class "badge placeholder" ] []]
                 )
 
              -- Title & price
