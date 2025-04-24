@@ -93,6 +93,12 @@
     display: inline-block;    /* to respect width/height */
     transition: box-shadow 0.2s;
   }
+
+  /* Reserve swatch space but hide placeholders */
+.slider-container .swatch.placeholder {
+    visibility: hidden;
+  }
+  
   
   /* highlight the selected one */
   .slider-container .swatch.selected {

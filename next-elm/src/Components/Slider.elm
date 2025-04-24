@@ -5,7 +5,7 @@ import Html.Attributes exposing (class)
 import Html.Events exposing (onClick)
 import Config.Products exposing (Product, Flags)
 import Components.Slide as Slide exposing (SlideMsg)
-import List exposing (drop, head, indexedMap, length, take)
+import List exposing (drop, head, indexedMap, length, map, maximum, take)
 import Maybe exposing (withDefault)
 import Platform.Cmd as Cmd
 
@@ -87,6 +87,14 @@ view model =
         total        = List.length model.slides
         visibleCount = 3
 
+        maxSwatches : Int
+        maxSwatches =
+            model.slides
+                |> map .colors
+                |> map length
+                |> maximum
+                |> withDefault 0
+
         canPrev =
             model.currentIndex > 0
 
@@ -118,7 +126,7 @@ view model =
                                     |> withDefault 0
                         in
                         Html.map (SlideMsgAt idx)
-                            (Slide.view isInner selectedIdx idx product)
+                            (Slide.view isInner selectedIdx maxSwatches idx product)
                     )
                     slidesWithIdx
                 )

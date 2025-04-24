@@ -5310,6 +5310,16 @@ var $elm$core$List$head = function (list) {
 };
 var $elm$virtual_dom$VirtualDom$map = _VirtualDom_map;
 var $elm$html$Html$map = $elm$virtual_dom$VirtualDom$map;
+var $elm$core$List$maximum = function (list) {
+	if (list.b) {
+		var x = list.a;
+		var xs = list.b;
+		return $elm$core$Maybe$Just(
+			A3($elm$core$List$foldl, $elm$core$Basics$max, x, xs));
+	} else {
+		return $elm$core$Maybe$Nothing;
+	}
+};
 var $elm$virtual_dom$VirtualDom$Normal = function (a) {
 	return {$: 'Normal', a: a};
 };
@@ -5481,9 +5491,38 @@ var $elm$core$Maybe$withDefault = F2(
 			return _default;
 		}
 	});
-var $author$project$Components$Slide$view = F4(
-	function (isInner, selectedIdx, _v0, product) {
+var $author$project$Components$Slide$view = F5(
+	function (isInner, selectedIdx, maxSwatches, _v0, product) {
+		var swatchElems = A2(
+			$elm$core$List$indexedMap,
+			F2(
+				function (i, c) {
+					return A2(
+						$elm$html$Html$span,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class(
+								'swatch' + (_Utils_eq(i, selectedIdx) ? ' selected' : '')),
+								$elm$html$Html$Events$onClick(
+								$author$project$Components$Slide$SelectColor(i)),
+								$elm$html$Html$Attributes$title(c.name),
+								A2($elm$html$Html$Attributes$style, 'background-color', c.name)
+							]),
+						_List_Nil);
+				}),
+			product.colors);
 		var setUrl = A2($elm$core$Maybe$withDefault, '', product.setImageUrl);
+		var placeholderCount = maxSwatches - $elm$core$List$length(product.colors);
+		var placeholderSpans = A2(
+			$elm$core$List$repeat,
+			placeholderCount,
+			A2(
+				$elm$html$Html$span,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('swatch placeholder')
+					]),
+				_List_Nil));
 		var maybeColor = $elm$core$List$head(
 			A2($elm$core$List$drop, selectedIdx, product.colors));
 		var imageElement = function () {
@@ -5620,7 +5659,7 @@ var $author$project$Components$Slide$view = F4(
 											]))
 									]),
 								_Utils_ap(
-									(!product.isSet) ? _List_fromArray(
+									_List_fromArray(
 										[
 											A2(
 											$elm$html$Html$div,
@@ -5628,25 +5667,8 @@ var $author$project$Components$Slide$view = F4(
 												[
 													$elm$html$Html$Attributes$class('color-swatches')
 												]),
-											A2(
-												$elm$core$List$indexedMap,
-												F2(
-													function (i, c) {
-														return A2(
-															$elm$html$Html$span,
-															_List_fromArray(
-																[
-																	$elm$html$Html$Attributes$class(
-																	'swatch' + (_Utils_eq(i, selectedIdx) ? ' selected' : '')),
-																	$elm$html$Html$Events$onClick(
-																	$author$project$Components$Slide$SelectColor(i)),
-																	$elm$html$Html$Attributes$title(c.name),
-																	A2($elm$html$Html$Attributes$style, 'background-color', c.name)
-																]),
-															_List_Nil);
-													}),
-												product.colors))
-										]) : _List_Nil,
+											_Utils_ap(swatchElems, placeholderSpans))
+										]),
 									_List_fromArray(
 										[
 											A2(
@@ -5676,6 +5698,19 @@ var $author$project$Components$Slider$view = function (model) {
 				return _Utils_Tuple2(p, i + model.currentIndex);
 			}),
 		visible);
+	var maxSwatches = A2(
+		$elm$core$Maybe$withDefault,
+		0,
+		$elm$core$List$maximum(
+			A2(
+				$elm$core$List$map,
+				$elm$core$List$length,
+				A2(
+					$elm$core$List$map,
+					function ($) {
+						return $.colors;
+					},
+					model.slides))));
 	var canPrev = model.currentIndex > 0;
 	var canNext = _Utils_cmp(model.currentIndex + visibleCount, total) < 0;
 	return A2(
@@ -5726,7 +5761,7 @@ var $author$project$Components$Slider$view = function (model) {
 								return A2(
 									$elm$html$Html$map,
 									$author$project$Components$Slider$SlideMsgAt(idx),
-									A4($author$project$Components$Slide$view, isInner, selectedIdx, idx, product));
+									A5($author$project$Components$Slide$view, isInner, selectedIdx, maxSwatches, idx, product));
 							},
 							slidesWithIdx))
 					]),
