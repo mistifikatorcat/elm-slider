@@ -5624,21 +5624,23 @@ var $author$project$Components$Slide$view = F5(
 						[
 							$elm$html$Html$Attributes$class('slide-image-wrapper')
 						]),
-					_List_fromArray(
-						[
-							imageElement,
-							A2(
-							$elm$html$Html$button,
-							_List_fromArray(
-								[
-									$elm$html$Html$Events$onClick($author$project$Components$Slide$ToggleInner),
-									$elm$html$Html$Attributes$class('slide-toggle')
-								]),
-							_List_fromArray(
-								[
-									$elm$html$Html$text('⟳')
-								]))
-						])),
+					A2(
+						$elm$core$List$cons,
+						imageElement,
+						(!product.isSet) ? _List_fromArray(
+							[
+								A2(
+								$elm$html$Html$button,
+								_List_fromArray(
+									[
+										$elm$html$Html$Events$onClick($author$project$Components$Slide$ToggleInner),
+										$elm$html$Html$Attributes$class('slide-toggle')
+									]),
+								_List_fromArray(
+									[
+										$elm$html$Html$text('⟳')
+									]))
+							]) : _List_Nil)),
 					A2(
 					$elm$html$Html$div,
 					_List_fromArray(
@@ -5663,23 +5665,55 @@ var $author$project$Components$Slide$view = F5(
 									$elm$html$Html$div,
 									_List_fromArray(
 										[
-											$elm$html$Html$Attributes$class('slide-title')
+											$elm$html$Html$Attributes$class('slide-titles-prices')
 										]),
-									_List_fromArray(
-										[
-											$elm$html$Html$text(product.title)
-										])),
-									A2(
-									$elm$html$Html$div,
-									_List_fromArray(
-										[
-											$elm$html$Html$Attributes$class('slide-price')
-										]),
-									_List_fromArray(
-										[
-											$elm$html$Html$text(
-											'$' + $elm$core$String$fromFloat(product.price))
-										]))
+									_Utils_ap(
+										_List_fromArray(
+											[
+												A2(
+												$elm$html$Html$div,
+												_List_fromArray(
+													[
+														$elm$html$Html$Attributes$class('slide-title')
+													]),
+												_List_fromArray(
+													[
+														$elm$html$Html$text(product.title)
+													])),
+												A2(
+												$elm$html$Html$span,
+												_List_fromArray(
+													[
+														$elm$html$Html$Attributes$class('slide-price')
+													]),
+												_List_fromArray(
+													[
+														$elm$html$Html$text(
+														'$' + $elm$core$String$fromFloat(product.price))
+													]))
+											]),
+										function () {
+											var _v1 = product.setValue;
+											if (_v1.$ === 'Just') {
+												var v = _v1.a;
+												return _List_fromArray(
+													[
+														A2(
+														$elm$html$Html$span,
+														_List_fromArray(
+															[
+																$elm$html$Html$Attributes$class('slide-price-valued')
+															]),
+														_List_fromArray(
+															[
+																$elm$html$Html$text(
+																'Valued at ' + ($elm$core$String$fromFloat(v) + '$'))
+															]))
+													]);
+											} else {
+												return _List_Nil;
+											}
+										}()))
 								]),
 							_Utils_ap(
 								_List_fromArray(

@@ -1,10 +1,11 @@
 module Components.Slide exposing (SlideMsg(..), view)
 
 import Html exposing (Html, button, div, img, span, text)
-import Html.Attributes exposing (class, src)
+import Html.Attributes exposing (class, src, title, style)
 import Html.Events exposing (onClick)
 import List exposing (drop, head)
 import Maybe exposing (withDefault)
+import String exposing (fromFloat)
 import Config.Products exposing (Product)
 
 
@@ -21,13 +22,13 @@ type SlideMsg
     - isInner     : Bool, whether to show innerUrl (True) or outerUrl (False)
     - selectedIdx : Int, which color swatch is currently selected
     - maxSwatches : Int, the maximum number of swatches across all slides
-    - slideIndex  : Int, this slide’s index (used for Html.map)
+    - slideIndex  : Int (unused here)
     - product     : Product record
 -}
 view : Bool -> Int -> Int -> Int -> Product -> Html SlideMsg
 view isInner selectedIdx maxSwatches _ product =
     let
-        -- unwrap the Maybe String for set‐products
+        -- unwrap the set‐image URL
         setUrl : String
         setUrl =
             withDefault "" product.setImageUrl
@@ -59,6 +60,7 @@ view isInner selectedIdx maxSwatches _ product =
                     Nothing ->
                         text "No image!"
 
+        -- 1) real badge spans
         badgeElems : List (Html SlideMsg)
         badgeElems =
             List.concat
@@ -72,7 +74,7 @@ view isInner selectedIdx maxSwatches _ product =
                       []
                 ]
 
-        -- 2) only placeholder if there are no real badges
+        -- 2) badge placeholder if none
         placeholderBadges : List (Html SlideMsg)
         placeholderBadges =
             if List.isEmpty badgeElems then
@@ -80,7 +82,7 @@ view isInner selectedIdx maxSwatches _ product =
             else
                 []
 
-        -- real swatch circles
+        -- 3) real swatch circles
         swatchElems : List (Html SlideMsg)
         swatchElems =
             List.indexedMap
@@ -88,14 +90,14 @@ view isInner selectedIdx maxSwatches _ product =
                     span
                         [ class ("swatch" ++ if i == selectedIdx then " selected" else "")
                         , onClick (SelectColor i)
-                        , Html.Attributes.title c.name
-                        , Html.Attributes.style "background-color" c.name
+                        , title c.name
+                        , style "background-color" c.name
                         ]
                         []
                 )
                 product.colors
 
-        -- how many placeholders we need
+        -- 4) swatch placeholders
         placeholderCount : Int
         placeholderCount =
             maxSwatches - List.length product.colors
@@ -106,27 +108,42 @@ view isInner selectedIdx maxSwatches _ product =
                 ( span [ class "swatch placeholder" ] [] )
     in
     div [ class "slide" ]
-        [ -- IMAGE + hover‐toggle button
+        [ -- IMAGE + (toggle only for non‐sets)
           div [ class "slide-image-wrapper" ]
-            [ imageElement
-            , button [ onClick ToggleInner, class "slide-toggle" ] [ text "⟳" ]
-            ]
+            ((imageElement
+                :: if not product.isSet then
+                       [ button [ onClick ToggleInner, class "slide-toggle" ] [ text "⟳" ] ]
+                   else
+                       []
+             )
+            )
 
-          -- CONTENT BELOW THE IMAGE
+          -- CONTENT BLOCK
         , div [ class "slide-content" ]
             (  -- badges row
-           [ div [ class "slide-badges" ] (badgeElems ++ placeholderBadges) ]
-             -- title & price
-             ++ [ div [ class "slide-title" ] [ text product.title ]
-                , div [ class "slide-price" ] [ text ("$" ++ String.fromFloat product.price) ]
+               [ div [ class "slide-badges" ] (badgeElems ++ placeholderBadges) ]
+
+               -- titles & prices row: title, then price, then valued price
+             ++ [ div [ class "slide-titles-prices" ]
+                    ( [ div [ class "slide-title" ] [ text product.title ]
+                      , span [ class "slide-price" ]
+                             [ text ("$" ++ fromFloat product.price) ]
+                      ]
+                      ++ case product.setValue of
+                             Just v ->
+                                 [ span [ class "slide-price-valued" ]
+                                     [ text ("Valued at " ++ fromFloat v ++ "$") ]
+                                 ]
+
+                             Nothing ->
+                                 []
+                    )
                 ]
 
-             -- swatches row: real + placeholders
-             ++ [ div [ class "color-swatches" ]
-                    (swatchElems ++ placeholderSpans)
-                ]
+               -- swatches row: real + placeholders
+             ++ [ div [ class "color-swatches" ] (swatchElems ++ placeholderSpans) ]
 
-             -- description (pinned to bottom via CSS)
+               -- description
              ++ [ div [ class "slide-desc" ] [ text product.description ] ]
             )
         ]

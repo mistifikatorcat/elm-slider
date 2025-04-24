@@ -83,6 +83,14 @@
     color: #555;
     margin: 0;
   }
+
+  .slider-container .slide-content .slide-price-valued {
+    font-size: .7rem;
+    color: #555;
+    margin: 0;
+    padding-left: .5rem;
+    font-style: italic;
+  }
   
   /* Swatches & description */
   .slider-container .swatch {
