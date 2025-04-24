@@ -5570,6 +5570,19 @@ var $author$project$Components$Slide$view = F5(
 				}
 			}
 		}();
+		var featureSpan = $elm$core$String$isEmpty(product.feature) ? _List_Nil : _List_fromArray(
+			[
+				A2(
+				$elm$html$Html$span,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('slide-feature')
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text(product.feature)
+					]))
+			]);
 		var badgeElems = $elm$core$List$concat(
 			_List_fromArray(
 				[
@@ -5676,44 +5689,48 @@ var $author$project$Components$Slide$view = F5(
 													[
 														$elm$html$Html$Attributes$class('slide-title')
 													]),
-												_List_fromArray(
-													[
-														$elm$html$Html$text(product.title)
-													])),
 												A2(
-												$elm$html$Html$span,
-												_List_fromArray(
-													[
-														$elm$html$Html$Attributes$class('slide-price')
-													]),
-												_List_fromArray(
-													[
-														$elm$html$Html$text(
-														'$' + $elm$core$String$fromFloat(product.price))
-													]))
+													$elm$core$List$cons,
+													$elm$html$Html$text(product.title),
+													featureSpan))
 											]),
-										function () {
-											var _v1 = product.setValue;
-											if (_v1.$ === 'Just') {
-												var v = _v1.a;
-												return _List_fromArray(
-													[
-														A2(
-														$elm$html$Html$span,
-														_List_fromArray(
-															[
-																$elm$html$Html$Attributes$class('slide-price-valued')
-															]),
-														_List_fromArray(
-															[
-																$elm$html$Html$text(
-																'Valued at ' + ($elm$core$String$fromFloat(v) + '$'))
-															]))
-													]);
-											} else {
-												return _List_Nil;
-											}
-										}()))
+										_Utils_ap(
+											_List_fromArray(
+												[
+													A2(
+													$elm$html$Html$span,
+													_List_fromArray(
+														[
+															$elm$html$Html$Attributes$class('slide-price')
+														]),
+													_List_fromArray(
+														[
+															$elm$html$Html$text(
+															'$' + $elm$core$String$fromFloat(product.price))
+														]))
+												]),
+											function () {
+												var _v1 = product.setValue;
+												if (_v1.$ === 'Just') {
+													var v = _v1.a;
+													return _List_fromArray(
+														[
+															A2(
+															$elm$html$Html$span,
+															_List_fromArray(
+																[
+																	$elm$html$Html$Attributes$class('slide-price-valued')
+																]),
+															_List_fromArray(
+																[
+																	$elm$html$Html$text(
+																	'Valued at ' + ($elm$core$String$fromFloat(v) + '$'))
+																]))
+														]);
+												} else {
+													return _List_Nil;
+												}
+											}())))
 								]),
 							_Utils_ap(
 								_List_fromArray(
@@ -5873,7 +5890,7 @@ _Platform_export({'Main':{'init':$author$project$Main$main(
 													function (isNew) {
 														return A2(
 															$elm$json$Json$Decode$andThen,
-															function (features) {
+															function (feature) {
 																return A2(
 																	$elm$json$Json$Decode$andThen,
 																	function (description) {
@@ -5881,7 +5898,7 @@ _Platform_export({'Main':{'init':$author$project$Main$main(
 																			$elm$json$Json$Decode$andThen,
 																			function (colors) {
 																				return $elm$json$Json$Decode$succeed(
-																					{colors: colors, description: description, features: features, isNew: isNew, isSet: isSet, price: price, setImageUrl: setImageUrl, setValue: setValue, title: title});
+																					{colors: colors, description: description, feature: feature, isNew: isNew, isSet: isSet, price: price, setImageUrl: setImageUrl, setValue: setValue, title: title});
 																			},
 																			A2(
 																				$elm$json$Json$Decode$field,
@@ -5912,10 +5929,7 @@ _Platform_export({'Main':{'init':$author$project$Main$main(
 																	},
 																	A2($elm$json$Json$Decode$field, 'description', $elm$json$Json$Decode$string));
 															},
-															A2(
-																$elm$json$Json$Decode$field,
-																'features',
-																$elm$json$Json$Decode$list($elm$json$Json$Decode$string)));
+															A2($elm$json$Json$Decode$field, 'feature', $elm$json$Json$Decode$string));
 													},
 													A2($elm$json$Json$Decode$field, 'isNew', $elm$json$Json$Decode$bool));
 											},

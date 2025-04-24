@@ -16,7 +16,7 @@ type alias Product =
     { title        : String
     , price        : Float
     , description  : String
-    , features     : List String
+    , feature     :  String
     , isNew        : Bool
     , isSet        : Bool
     , setImageUrl  : Maybe String
@@ -38,13 +38,13 @@ colorDecoder =
 
 productDecoder : Decoder Product
 productDecoder =
-    D.map6 (\title price description features isNew isSet ->
+    D.map6 (\title price description feature isNew isSet ->
         -- we’ll fill in setImageUrl, setValue, and colors later
         \maybeUrl maybeVal colors ->
             { title       = title
             , price       = price
             , description = description
-            , features    = features
+            , feature    = feature
             , isNew       = isNew
             , isSet       = isSet
             , setImageUrl = maybeUrl
@@ -55,7 +55,7 @@ productDecoder =
       (D.field "title"       D.string)
       (D.field "price"       D.float)
       (D.field "description" D.string)
-      (D.field "features"    (D.list D.string))
+      (D.field "feature"    D.string)
       (D.field "isNew"       D.bool)
       (D.field "isSet"       D.bool)
     |> D.andThen

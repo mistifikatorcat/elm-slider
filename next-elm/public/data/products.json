@@ -3,9 +3,7 @@
         "title": "Cool Sneakers",
         "price": 99.99,
         "description": "High-top comfort meets street style. Blue is different, though.",
-        "features": [
-            ""
-        ],
+        "feature": "",
         "isNew": true,
         "isSet": false,
         "colors": [
@@ -29,7 +27,7 @@
         "title": "Sweet Gift",
         "price": 249.99,
         "description": "A set of sweet presents. Tasty.",
-        "features": [],
+        "feature": "",
         "colors": [],
         "isNew": false,
         "isSet": true,
@@ -40,8 +38,7 @@
         "title": "Cinder block",
         "price": 200,
         "description": "Every big thing starts with something small. Or not.",
-        "features": [
-        ],
+        "feature": "",
         "isNew": false,
         "isSet": false,
         "colors": [
@@ -65,9 +62,7 @@
         "title": "2001 Honda Civic",
         "price": 6000,
         "description": "Pretty nice car",
-        "features": [
-            "Heated cupholders"
-        ],
+        "feature": "Heated cupholders",
         "isNew": false,
         "isSet": false,
         "colors": [
@@ -91,7 +86,7 @@
         "title": "Hot Wheels Set",
         "price": 64,
         "description": "20 cars for every taste",
-        "features": [],
+        "feature": "",
         "colors": [],
         "isNew": false,
         "isSet": true,
