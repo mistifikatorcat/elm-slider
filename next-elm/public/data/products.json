@@ -46,9 +46,15 @@
         "isSet": false,
         "colors": [
             {
-                "name": "Concrete",
+                "name": "Gray",
                 "outerUrl": "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fhousing.com%2Fnews%2Fwp-content%2Fuploads%2F2023%2F02%2FCMU-Blocks-8-CMU-8X8X16.jpg&f=1&nofb=1&ipt=b29b2182f1dd09cf08c66531ee857b07f8171c35c3c064eaed0af1bd63e4f51d",
                 "innerUrl": "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fimages.homedepot-static.com%2FproductImages%2F04644eef-167b-44f8-a2a5-8d289687f10a%2Fsvn%2Fcinder-blocks-32311352-64_300.jpg&f=1&nofb=1&ipt=c3502f8e2fca887b9785c62485edaae590b01370c463d2eebb3c0033d77cda7a",
+                "isNew": false
+            },
+            {
+                "name": "Red",
+                "outerUrl": "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse2.mm.bing.net%2Fth%2Fid%2FOIP.JaBaY5z7G9rheWdYYWxgiwAAAA%3Fpid%3DApi&f=1&ipt=9ab7b238f0d446274a75b173e33dcd294a21db37856d2cacc122d23b07af3370",
+                "innerUrl": "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fmobileimages.lowes.com%2Fproduct%2Fconverted%2F742786%2F742786300881.jpg%3Fsize%3Dpdhism&f=1&nofb=1&ipt=eaddde01b07eccc7844b53ee2b5c48335e415433f640b3744ec04538f236fb7c",
                 "isNew": false
             }
         ],
@@ -62,7 +68,7 @@
         "features": [
             "Heated cupholders"
         ],
-        "isNew": true,
+        "isNew": false,
         "isSet": false,
         "colors": [
             {

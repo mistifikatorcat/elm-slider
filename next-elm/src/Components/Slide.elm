@@ -94,8 +94,10 @@ view isInner selectedIdx _ product =
                                 span
                                     [ class ("swatch" ++ if i == selectedIdx then " selected" else "")
                                     , onClick (SelectColor i)
+                                    , Html.Attributes.title c.name
+                                    , Html.Attributes.style "background-color" c.name
                                     ]
-                                    [ text c.name ]
+                                    []
                             )
                             product.colors
                         )

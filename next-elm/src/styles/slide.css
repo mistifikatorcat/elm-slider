@@ -84,9 +84,19 @@
   }
   
   /* Swatches & description */
-  .slider-container .slide-content .color-swatches {
-    display: flex;
-    gap: .5rem;
+  .slider-container .swatch {
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    border: 1px solid #ddd;
+    cursor: pointer;
+    display: inline-block;    /* to respect width/height */
+    transition: box-shadow 0.2s;
+  }
+  
+  /* highlight the selected one */
+  .slider-container .swatch.selected {
+    box-shadow: 0 0 0 0.5px #333;
   }
   .slider-container .slide-content .slide-desc {
     font-size: .85rem;

@@ -5469,6 +5469,9 @@ var $elm$html$Html$Attributes$src = function (url) {
 		'src',
 		_VirtualDom_noJavaScriptOrHtmlUri(url));
 };
+var $elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
+var $elm$html$Html$Attributes$style = $elm$virtual_dom$VirtualDom$style;
+var $elm$html$Html$Attributes$title = $elm$html$Html$Attributes$stringProperty('title');
 var $elm$core$Maybe$withDefault = F2(
 	function (_default, maybe) {
 		if (maybe.$ === 'Just') {
@@ -5636,12 +5639,11 @@ var $author$project$Components$Slide$view = F4(
 																	$elm$html$Html$Attributes$class(
 																	'swatch' + (_Utils_eq(i, selectedIdx) ? ' selected' : '')),
 																	$elm$html$Html$Events$onClick(
-																	$author$project$Components$Slide$SelectColor(i))
+																	$author$project$Components$Slide$SelectColor(i)),
+																	$elm$html$Html$Attributes$title(c.name),
+																	A2($elm$html$Html$Attributes$style, 'background-color', c.name)
 																]),
-															_List_fromArray(
-																[
-																	$elm$html$Html$text(c.name)
-																]));
+															_List_Nil);
 													}),
 												product.colors))
 										]) : _List_Nil,
