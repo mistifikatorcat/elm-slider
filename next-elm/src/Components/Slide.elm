@@ -4,94 +4,87 @@ import Html exposing (Html, button, div, img, span, text)
 import Html.Attributes exposing (class, src)
 import Html.Events exposing (onClick)
 import Maybe exposing (withDefault)
-import List exposing (head)
+import List exposing (head, indexedMap)
 import Config.Products exposing (Product)
 
 
--- MESSAGES
+-- Slide-specific messages
 
 type SlideMsg
     = SelectColor Int
     | ToggleInner
 
 
--- VIEW
-
-{-|
-  isInner = True  → show the “innerUrl” on the first color
-  isInner = False → show the “outerUrl”
--}
+-- VIEW: Boolean flag picks outer vs inner image
 view : Bool -> Int -> Product -> Html SlideMsg
-view isInner _ product =
+view isInner productIndex product =
     let
-        -- unwrap the Maybe URL for “set” products
+        -- Determine the correct image URL
         setUrl : String
         setUrl =
             withDefault "" product.setImageUrl
 
-        -- if non‐set, get the first color (if any)
         maybeColor =
             head product.colors
 
-        -- exactly one image element
-        imageElement =
+        imageUrl : String
+        imageUrl =
             if product.isSet then
-                if setUrl /= "" then
-                    img [ src setUrl, class "slide-image" ] []
-                else
-                    text "No image!"
+                setUrl
             else
                 case maybeColor of
-                    Just c ->
-                        let
-                            urlToShow =
-                                if isInner then
-                                    c.innerUrl
-                                else
-                                    c.outerUrl
-                        in
-                        img [ src urlToShow, class "slide-image" ] []
+                    Just c -> if isInner then c.innerUrl else c.outerUrl
+                    Nothing -> ""
 
-                    Nothing ->
-                        text "No image!"
-    in
-    div [ class "slide" ]
-        [ -- IMAGE + hover‐only toggle button
-          div [ class "slide-image-wrapper" ]
-            [ imageElement
-            , button [ onClick ToggleInner, class "slide-toggle" ]
-                     [ text "⟳" ]
-            ]
+        imageElement : Html SlideMsg
+        imageElement =
+            if imageUrl /= "" then
+                img [ src imageUrl, class "slide-image" ] []
+            else
+                text "No image!"
 
-        -- CONTENT BELOW THE IMAGE
-        , div [ class "slide-content" ]
-            (  (if product.isNew then [ span [ class "badge" ] [ text "New" ] ] else [])
-             ++ (if product.isSet then [ span [ class "badge" ] [ text "Set" ] ] else [])
-             ++ [ div [ class "slide-title" ] [ text product.title ]
-                , div [ class "slide-price" ]
-                      [ text ("$" ++ String.fromFloat product.price) ]
-                ]
-             ++ (if not product.isSet then
-                    [ div [ class "color-swatches" ]
-                        (List.indexedMap
-                            (\i c ->
-                                span
-                                    [ class ("swatch" ++ if i == 0 then " selected" else "")
-                                    , onClick (SelectColor i)
-                                    ]
-                                    ([ text c.name ]
-                                     ++ if c.isNew then
-                                            [ span [ class "badge" ] [ text "New" ] ]
-                                        else
-                                            []
-                                    )
-                            )
-                            product.colors
-                        )
-                    ]
+        badges : List (Html SlideMsg)
+        badges =
+            (if product.isNew then
+                 [ span [ class "badge" ] [ text "New" ] ]
+             else
+                 []
+            )
+            ++ (if product.isSet then
+                    [ span [ class "badge" ] [ text "Set" ] ]
                 else
                     []
-                )
-             ++ [ div [ class "slide-desc" ] [ text product.description ] ]
+               )
+    in
+    div [ class "slide" ]
+        [ -- Image + toggle button
+          div [ class "slide-image-wrapper" ]
+            [ imageElement
+            , button [ onClick ToggleInner, class "slide-toggle" ] [ text "⟳" ]
+            ]
+
+          -- Content block with badges above title
+        , div [ class "slide-content" ]
+            ( badges
+              ++ [ div [ class "slide-title" ] [ text product.title ]
+                 , div [ class "slide-price" ] [ text ("$" ++ String.fromFloat product.price) ]
+                 ]
+              ++ (if not product.isSet then
+                     [ div [ class "color-swatches" ]
+                         (indexedMap
+                             (\i c ->
+                                span
+                                    [ class ("swatch" ++ if i == productIndex then " selected" else "")
+                                    , onClick (SelectColor i)
+                                    ]
+                                    [ text c.name ]
+                             )
+                             product.colors
+                         )
+                     ]
+                  else
+                     []
+                 )
+              ++ [ div [ class "slide-desc" ] [ text product.description ] ]
             )
         ]

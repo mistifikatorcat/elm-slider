@@ -83,7 +83,7 @@ view model =
     in
     div [ class "slider-container" ]
         ((if canPrev then
-              [ button [ onClick Prev, class "nav-button" ] [ text "<" ] ]
+              [ button [ onClick Prev, class "nav-button prev" ] [ text "<" ] ]
           else
               []
          )
@@ -102,7 +102,7 @@ view model =
                 )
             ]
          ++ (if canNext then
-                [ button [ onClick Next, class "nav-button" ] [ text ">" ] ]
+                [ button [ onClick Next, class "nav-button next" ] [ text ">" ] ]
              else
                 []
             )

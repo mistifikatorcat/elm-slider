@@ -8,6 +8,7 @@
     overflow: hidden;
     display: flex;
     flex-direction: column;
+
   }
   
   /* Image wrapper & hover toggle */
@@ -41,18 +42,19 @@
   
   /* Text content below */
   .slider-container .slide-content {
-    padding: 1rem;
+    /* padding: 1rem; */
     display: flex;
     flex-direction: column;
     gap: .5rem;
+    align-items: flex-start;
   }
   
   /* Badges */
   .slider-container .slide-content .badge {
-    background: #6b00e6;
+
     color: #fff;
     font-size: .75rem;
-    padding: .2rem .4rem;
+    /* padding: .2rem .4rem; */
     border-radius: 2px;
     align-self: flex-start;
   }

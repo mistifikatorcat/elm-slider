@@ -6,6 +6,7 @@
     overflow-y: visible;
     scroll-behavior: smooth;
     scroll-snap-type: x mandatory;
+    position: relative;
   
     /* hide scrollbar */
     -ms-overflow-style: none;
@@ -19,8 +20,8 @@
   .slides-wrapper {
     display: grid;
     grid-auto-flow: column dense;
-    gap: 0.5rem; /* adjust gutter between slides */
-    /* subtract two gutters (gap * (3–1)) then split into 3 columns */
+    gap: 0.5rem; 
+
     grid-auto-columns: calc((100% - (0.5rem * 2)) / 3);
   }
   
@@ -29,32 +30,25 @@
     scroll-snap-align: start;
   }
   
-  .nav-button {
+  .slider-container .nav-button {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    background: rgba(255, 255, 255, 0.9);
-    border: none;
-    width: 2rem;
-    height: 2rem;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    color: #444;
-    font-size: 1rem;
     z-index: 10;
+  
+    /* explicitly reset both sides */
+    left: auto;
+    right: auto;
   }
   
-  .nav-button:first-of-type {
-    left: 1rem;
+  /* Now pin them where we want */
+  .slider-container .nav-button.prev {
+    left: 10rem;   /* moves the Prev button 0.5rem outside on the left */
   }
   
-  .nav-button:last-of-type {
-    right: 1rem;
+  .slider-container .nav-button.next {
+    right: 10rem;  /* moves the Next button 0.5rem outside on the right */
   }
-  
   @media (max-width: 768px) {
     .slides-wrapper > * {
       flex: 0 0 100%;
