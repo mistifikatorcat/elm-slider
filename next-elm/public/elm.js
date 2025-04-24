@@ -5469,8 +5469,26 @@ var $author$project$Components$Slide$SelectColor = function (a) {
 	return {$: 'SelectColor', a: a};
 };
 var $author$project$Components$Slide$ToggleInner = {$: 'ToggleInner'};
+var $elm$core$List$append = F2(
+	function (xs, ys) {
+		if (!ys.b) {
+			return xs;
+		} else {
+			return A3($elm$core$List$foldr, $elm$core$List$cons, ys, xs);
+		}
+	});
+var $elm$core$List$concat = function (lists) {
+	return A3($elm$core$List$foldr, $elm$core$List$append, _List_Nil, lists);
+};
 var $elm$core$String$fromFloat = _String_fromNumber;
 var $elm$html$Html$img = _VirtualDom_node('img');
+var $elm$core$List$isEmpty = function (xs) {
+	if (!xs.b) {
+		return true;
+	} else {
+		return false;
+	}
+};
 var $elm$core$Basics$neq = _Utils_notEqual;
 var $elm$html$Html$span = _VirtualDom_node('span');
 var $elm$html$Html$Attributes$src = function (url) {
@@ -5552,6 +5570,46 @@ var $author$project$Components$Slide$view = F5(
 				}
 			}
 		}();
+		var badgeElems = $elm$core$List$concat(
+			_List_fromArray(
+				[
+					product.isNew ? _List_fromArray(
+					[
+						A2(
+						$elm$html$Html$span,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('badge')
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text('New')
+							]))
+					]) : _List_Nil,
+					product.isSet ? _List_fromArray(
+					[
+						A2(
+						$elm$html$Html$span,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('badge')
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text('Set')
+							]))
+					]) : _List_Nil
+				]));
+		var placeholderBadges = $elm$core$List$isEmpty(badgeElems) ? _List_fromArray(
+			[
+				A2(
+				$elm$html$Html$span,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('badge placeholder')
+					]),
+				_List_Nil)
+			]) : _List_Nil;
 		return A2(
 			$elm$html$Html$div,
 			_List_fromArray(
@@ -5588,50 +5646,40 @@ var $author$project$Components$Slide$view = F5(
 							$elm$html$Html$Attributes$class('slide-content')
 						]),
 					_Utils_ap(
-						product.isNew ? _List_fromArray(
+						_List_fromArray(
 							[
 								A2(
-								$elm$html$Html$span,
+								$elm$html$Html$div,
 								_List_fromArray(
 									[
-										$elm$html$Html$Attributes$class('badge')
+										$elm$html$Html$Attributes$class('slide-badges')
 									]),
-								_List_fromArray(
-									[
-										$elm$html$Html$text('New')
-									]))
-							]) : _List_fromArray(
-							[
-								A2(
-								$elm$html$Html$span,
-								_List_fromArray(
-									[
-										$elm$html$Html$Attributes$class('badge placeholder')
-									]),
-								_List_Nil)
+								_Utils_ap(badgeElems, placeholderBadges))
 							]),
 						_Utils_ap(
-							product.isSet ? _List_fromArray(
+							_List_fromArray(
 								[
 									A2(
-									$elm$html$Html$span,
+									$elm$html$Html$div,
 									_List_fromArray(
 										[
-											$elm$html$Html$Attributes$class('badge')
+											$elm$html$Html$Attributes$class('slide-title')
 										]),
 									_List_fromArray(
 										[
-											$elm$html$Html$text('Set')
+											$elm$html$Html$text(product.title)
+										])),
+									A2(
+									$elm$html$Html$div,
+									_List_fromArray(
+										[
+											$elm$html$Html$Attributes$class('slide-price')
+										]),
+									_List_fromArray(
+										[
+											$elm$html$Html$text(
+											'$' + $elm$core$String$fromFloat(product.price))
 										]))
-								]) : _List_fromArray(
-								[
-									A2(
-									$elm$html$Html$span,
-									_List_fromArray(
-										[
-											$elm$html$Html$Attributes$class('badge placeholder')
-										]),
-									_List_Nil)
 								]),
 							_Utils_ap(
 								_List_fromArray(
@@ -5640,48 +5688,23 @@ var $author$project$Components$Slide$view = F5(
 										$elm$html$Html$div,
 										_List_fromArray(
 											[
-												$elm$html$Html$Attributes$class('slide-title')
+												$elm$html$Html$Attributes$class('color-swatches')
 											]),
-										_List_fromArray(
-											[
-												$elm$html$Html$text(product.title)
-											])),
+										_Utils_ap(swatchElems, placeholderSpans))
+									]),
+								_List_fromArray(
+									[
 										A2(
 										$elm$html$Html$div,
 										_List_fromArray(
 											[
-												$elm$html$Html$Attributes$class('slide-price')
+												$elm$html$Html$Attributes$class('slide-desc')
 											]),
 										_List_fromArray(
 											[
-												$elm$html$Html$text(
-												'$' + $elm$core$String$fromFloat(product.price))
+												$elm$html$Html$text(product.description)
 											]))
-									]),
-								_Utils_ap(
-									_List_fromArray(
-										[
-											A2(
-											$elm$html$Html$div,
-											_List_fromArray(
-												[
-													$elm$html$Html$Attributes$class('color-swatches')
-												]),
-											_Utils_ap(swatchElems, placeholderSpans))
-										]),
-									_List_fromArray(
-										[
-											A2(
-											$elm$html$Html$div,
-											_List_fromArray(
-												[
-													$elm$html$Html$Attributes$class('slide-desc')
-												]),
-											_List_fromArray(
-												[
-													$elm$html$Html$text(product.description)
-												]))
-										]))))))
+									])))))
 				]));
 	});
 var $author$project$Components$Slider$view = function (model) {

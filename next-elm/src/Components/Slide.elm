@@ -59,6 +59,27 @@ view isInner selectedIdx maxSwatches _ product =
                     Nothing ->
                         text "No image!"
 
+        badgeElems : List (Html SlideMsg)
+        badgeElems =
+            List.concat
+                [ if product.isNew then
+                      [ span [ class "badge" ] [ text "New" ] ]
+                  else
+                      []
+                , if product.isSet then
+                      [ span [ class "badge" ] [ text "Set" ] ]
+                  else
+                      []
+                ]
+
+        -- 2) only placeholder if there are no real badges
+        placeholderBadges : List (Html SlideMsg)
+        placeholderBadges =
+            if List.isEmpty badgeElems then
+                [ span [ class "badge placeholder" ] [] ]
+            else
+                []
+
         -- real swatch circles
         swatchElems : List (Html SlideMsg)
         swatchElems =
@@ -94,17 +115,7 @@ view isInner selectedIdx maxSwatches _ product =
           -- CONTENT BELOW THE IMAGE
         , div [ class "slide-content" ]
             (  -- badges row
-               (if product.isNew then
-                    [ span [ class "badge" ] [ text "New" ] ]
-                else
-                    [ span [ class "badge placeholder" ] [] ]
-               )
-             ++ (if product.isSet then
-                    [ span [ class "badge" ] [ text "Set" ] ]
-                else
-                    [ span [ class "badge placeholder" ] [] ]
-                )
-
+           [ div [ class "slide-badges" ] (badgeElems ++ placeholderBadges) ]
              -- title & price
              ++ [ div [ class "slide-title" ] [ text product.title ]
                 , div [ class "slide-price" ] [ text ("$" ++ String.fromFloat product.price) ]
