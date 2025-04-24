@@ -3,6 +3,9 @@ import { useEffect } from 'react'
 import Script from 'next/script'
 import products from '../../public/data/products.json'   // adjust path if needed
 
+import sliderStyles from '../styles/Slider.module.scss';
+import slideStyles  from '../styles/Slide.module.scss';
+
 type Color = {
   name: string
   outerUrl: string
@@ -42,7 +45,13 @@ export default function Home({ products }: { products: Product[] }) {
     <>
       {/* Make sure elm.js was output to public/elm.js by your build script */}
       <Script src="/elm.js" strategy="beforeInteractive" />
-      <div id="elm-root" style={{ minHeight: '500px' }} />
+     
+      <div className={sliderStyles.sliderRoot}>
+        {/* 🔥 wrap the slides for badge, swatch, etc. */}
+        <div className={slideStyles.slideRoot}>
+          <div id="elm-root" style={{ minHeight: '500px' }} />
+        </div>
+      </div>
     </>
   )
 }

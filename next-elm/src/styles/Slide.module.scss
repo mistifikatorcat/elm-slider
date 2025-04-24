@@ -1,0 +1,85 @@
+// Slide.module.scss
+
+.slideRoot {                           /* ← local “hook” here */
+    :global(.slide) {
+      background-color: #2fc794;
+      border: 1px solid #eee;
+      box-shadow: 0 4px 8px rgba(235, 8, 8, 0.897);
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      padding: 1rem;
+    }
+  
+    :global(.slide-title) {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: #222;
+    }
+  
+    :global(.slide-price) {
+      font-size: 0.9rem;
+      color: #555;
+      margin-bottom: 1rem;
+    }
+  
+    :global(.slide-image) {
+      width: 100%;
+      max-width: 400px;
+      height: auto;
+      object-fit: contain;
+      margin-bottom: 1rem;
+    }
+  
+    :global(.image-switcher) {
+      position: relative;
+      margin-bottom: 1rem;
+    }
+  
+    :global(.small-btn) {
+      font-size: 0.75rem;
+      padding: 0.2rem 0.5rem;
+      border: 1px solid #ddd;
+      background: none;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+  
+    :global(.color-swatches) {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+  
+    :global(.swatch) {
+      width: 1rem;
+      height: 1rem;
+      border-radius: 50%;
+      border: 1px solid #eee;
+      background: currentColor;
+      cursor: pointer;
+    }
+  
+    :global(.swatch.selected) {
+      box-shadow: 0 0 0 2px #333;
+    }
+  
+    :global(.badge) {
+      display: inline-block;
+      background: #6b00e6;
+      color: #fff;
+      font-size: 0.7rem;
+      padding: 0.2rem 0.4rem;
+      border-radius: 2px;
+      margin-right: 0.25rem;
+      text-transform: uppercase;
+    }
+  
+    :global(.slide-desc) {
+      font-size: 0.85rem;
+      color: #666;
+      margin-top: auto;
+    }
+  }
+  
