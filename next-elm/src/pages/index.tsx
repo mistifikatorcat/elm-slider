@@ -14,6 +14,7 @@ export default function Home() {
 
   return (
     <>
+      <h1>It's dangerous to go alone! Take this:</h1>
       <Script src="/elm.js" strategy="beforeInteractive" />
       <div id="elm-root" style={{ minHeight: '500px' }} />
     </>

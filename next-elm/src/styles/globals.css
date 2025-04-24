@@ -25,6 +25,13 @@ a {
 }
 
 
+h1{
+  text-align: center;
+  margin-top: 6rem;
+  margin-bottom: 6rem;
+}
+
+
 .slider-container {
   display: flex;
   align-items: center;

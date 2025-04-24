@@ -5469,6 +5469,31 @@ var $author$project$Components$Slide$SelectColor = function (a) {
 	return {$: 'SelectColor', a: a};
 };
 var $author$project$Components$Slide$ToggleInner = {$: 'ToggleInner'};
+var $elm$core$List$filter = F2(
+	function (isGood, list) {
+		return A3(
+			$elm$core$List$foldr,
+			F2(
+				function (x, xs) {
+					return isGood(x) ? A2($elm$core$List$cons, x, xs) : xs;
+				}),
+			_List_Nil,
+			list);
+	});
+var $elm$core$Tuple$second = function (_v0) {
+	var y = _v0.b;
+	return y;
+};
+var $elm$html$Html$Attributes$classList = function (classes) {
+	return $elm$html$Html$Attributes$class(
+		A2(
+			$elm$core$String$join,
+			' ',
+			A2(
+				$elm$core$List$map,
+				$elm$core$Tuple$first,
+				A2($elm$core$List$filter, $elm$core$Tuple$second, classes))));
+};
 var $elm$core$List$append = F2(
 	function (xs, ys) {
 		if (!ys.b) {
@@ -5511,6 +5536,7 @@ var $elm$core$Maybe$withDefault = F2(
 	});
 var $author$project$Components$Slide$view = F5(
 	function (isInner, selectedIdx, maxSwatches, _v0, product) {
+		var toggleSymbol = isInner ? '×' : '+';
 		var swatchElems = A2(
 			$elm$core$List$indexedMap,
 			F2(
@@ -5647,11 +5673,36 @@ var $author$project$Components$Slide$view = F5(
 								_List_fromArray(
 									[
 										$elm$html$Html$Events$onClick($author$project$Components$Slide$ToggleInner),
-										$elm$html$Html$Attributes$class('slide-toggle')
+										$elm$html$Html$Attributes$classList(
+										_List_fromArray(
+											[
+												_Utils_Tuple2('slide-toggle', true),
+												_Utils_Tuple2('open', isInner)
+											]))
 									]),
 								_List_fromArray(
 									[
-										$elm$html$Html$text('⟳')
+										A2(
+										$elm$html$Html$span,
+										_List_fromArray(
+											[
+												$elm$html$Html$Attributes$class('toggle-text')
+											]),
+										_List_fromArray(
+											[
+												$elm$html$Html$text(
+												isInner ? 'Close' : 'Show inside')
+											])),
+										A2(
+										$elm$html$Html$span,
+										_List_fromArray(
+											[
+												$elm$html$Html$Attributes$class('toggle-icon')
+											]),
+										_List_fromArray(
+											[
+												$elm$html$Html$text('+')
+											]))
 									]))
 							]) : _List_Nil)),
 					A2(
