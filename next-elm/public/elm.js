@@ -5163,20 +5163,64 @@ var $elm$core$Task$perform = F2(
 var $elm$browser$Browser$element = _Browser_element;
 var $elm$json$Json$Decode$field = _Json_decodeField;
 var $elm$json$Json$Decode$float = _Json_decodeFloat;
-var $elm$json$Json$Decode$list = _Json_decodeList;
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
+var $elm$core$List$repeatHelp = F3(
+	function (result, n, value) {
+		repeatHelp:
+		while (true) {
+			if (n <= 0) {
+				return result;
+			} else {
+				var $temp$result = A2($elm$core$List$cons, value, result),
+					$temp$n = n - 1,
+					$temp$value = value;
+				result = $temp$result;
+				n = $temp$n;
+				value = $temp$value;
+				continue repeatHelp;
+			}
+		}
+	});
+var $elm$core$List$repeat = F2(
+	function (n, value) {
+		return A3($elm$core$List$repeatHelp, _List_Nil, n, value);
+	});
+var $author$project$Components$Slider$init = function (flags) {
+	return _Utils_Tuple2(
+		{
+			currentIndex: 0,
+			innerStates: A2(
+				$elm$core$List$repeat,
+				$elm$core$List$length(flags),
+				false),
+			slides: flags
+		},
+		$elm$core$Platform$Cmd$none);
+};
+var $elm$json$Json$Decode$list = _Json_decodeList;
 var $elm$core$Platform$Sub$batch = _Platform_batch;
 var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
 var $elm$json$Json$Decode$null = _Json_decodeNull;
 var $elm$json$Json$Decode$oneOf = _Json_oneOf;
 var $elm$json$Json$Decode$string = _Json_decodeString;
 var $elm$core$Basics$ge = _Utils_ge;
+var $elm$core$Basics$not = _Basics_not;
 var $author$project$Components$Slider$update = F2(
 	function (msg, model) {
-		var count = $elm$core$List$length(model.slides);
 		var wrap = function (idx) {
-			return (idx < 0) ? (count - 1) : ((_Utils_cmp(idx, count) > -1) ? 0 : idx);
+			return (idx < 0) ? ($elm$core$List$length(model.slides) - 1) : ((_Utils_cmp(
+				idx,
+				$elm$core$List$length(model.slides)) > -1) ? 0 : idx);
+		};
+		var toggleAt = function (idx) {
+			return A2(
+				$elm$core$List$indexedMap,
+				F2(
+					function (i, b) {
+						return _Utils_eq(i, idx) ? (!b) : b;
+					}),
+				model.innerStates);
 		};
 		switch (msg.$) {
 			case 'Prev':
@@ -5192,7 +5236,17 @@ var $author$project$Components$Slider$update = F2(
 						currentIndex: wrap(model.currentIndex + 1)
 					});
 			default:
-				return model;
+				var idx = msg.a;
+				var slideMsg = msg.b;
+				if (slideMsg.$ === 'ToggleInner') {
+					return _Utils_update(
+						model,
+						{
+							innerStates: toggleAt(idx)
+						});
+				} else {
+					return model;
+				}
 		}
 	});
 var $author$project$Components$Slider$Next = {$: 'Next'};
@@ -5233,24 +5287,6 @@ var $elm$core$List$drop = F2(
 			}
 		}
 	});
-var $elm$core$List$maybeCons = F3(
-	function (f, mx, xs) {
-		var _v0 = f(mx);
-		if (_v0.$ === 'Just') {
-			var x = _v0.a;
-			return A2($elm$core$List$cons, x, xs);
-		} else {
-			return xs;
-		}
-	});
-var $elm$core$List$filterMap = F2(
-	function (f, xs) {
-		return A3(
-			$elm$core$List$foldr,
-			$elm$core$List$maybeCons(f),
-			_List_Nil,
-			xs);
-	});
 var $elm$core$List$head = function (list) {
 	if (list.b) {
 		var x = list.a;
@@ -5287,14 +5323,7 @@ var $author$project$Components$Slide$SelectColor = function (a) {
 var $author$project$Components$Slide$ToggleInner = {$: 'ToggleInner'};
 var $elm$core$String$fromFloat = _String_fromNumber;
 var $elm$html$Html$img = _VirtualDom_node('img');
-var $elm$core$List$isEmpty = function (xs) {
-	if (!xs.b) {
-		return true;
-	} else {
-		return false;
-	}
-};
-var $elm$core$Basics$not = _Basics_not;
+var $elm$core$Basics$neq = _Utils_notEqual;
 var $elm$html$Html$span = _VirtualDom_node('span');
 var $elm$html$Html$Attributes$src = function (url) {
 	return A2(
@@ -5311,26 +5340,37 @@ var $elm$core$Maybe$withDefault = F2(
 			return _default;
 		}
 	});
-var $author$project$Components$Slide$view = F2(
-	function (productIndex, product) {
-		var titleWithFeatures = _Utils_ap(
-			product.title,
-			$elm$core$List$isEmpty(product.features) ? '' : (' — ' + A2($elm$core$String$join, ', ', product.features)));
-		var selectedColorIndex = 0;
-		var maybeColor = $elm$core$List$head(
-			A2($elm$core$List$drop, selectedColorIndex, product.colors));
-		var badge = function (txt) {
-			return A2(
-				$elm$html$Html$span,
-				_List_fromArray(
-					[
-						$elm$html$Html$Attributes$class('badge')
-					]),
-				_List_fromArray(
-					[
-						$elm$html$Html$text(txt)
-					]));
-		};
+var $author$project$Components$Slide$view = F3(
+	function (isInner, _v0, product) {
+		var setUrl = A2($elm$core$Maybe$withDefault, '', product.setImageUrl);
+		var maybeColor = $elm$core$List$head(product.colors);
+		var imageElement = function () {
+			if (product.isSet) {
+				return (setUrl !== '') ? A2(
+					$elm$html$Html$img,
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$src(setUrl),
+							$elm$html$Html$Attributes$class('slide-image')
+						]),
+					_List_Nil) : $elm$html$Html$text('No image!');
+			} else {
+				if (maybeColor.$ === 'Just') {
+					var c = maybeColor.a;
+					var urlToShow = isInner ? c.innerUrl : c.outerUrl;
+					return A2(
+						$elm$html$Html$img,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$src(urlToShow),
+								$elm$html$Html$Attributes$class('slide-image')
+							]),
+						_List_Nil);
+				} else {
+					return $elm$html$Html$text('No image!');
+				}
+			}
+		}();
 		return A2(
 			$elm$html$Html$div,
 			_List_fromArray(
@@ -5339,137 +5379,150 @@ var $author$project$Components$Slide$view = F2(
 				]),
 			_List_fromArray(
 				[
-					product.isNew ? badge('New') : $elm$html$Html$text(''),
-					product.isSet ? badge('Set') : $elm$html$Html$text(''),
 					A2(
 					$elm$html$Html$div,
 					_List_fromArray(
 						[
-							$elm$html$Html$Attributes$class('slide-title')
+							$elm$html$Html$Attributes$class('slide-image-wrapper')
 						]),
 					_List_fromArray(
 						[
-							$elm$html$Html$text(titleWithFeatures)
-						])),
-					A2(
-					$elm$html$Html$div,
-					_List_fromArray(
-						[
-							$elm$html$Html$Attributes$class('slide-price')
-						]),
-					_List_fromArray(
-						[
-							$elm$html$Html$text(
-							'$' + $elm$core$String$fromFloat(product.price))
-						])),
-					function () {
-					var _v0 = _Utils_Tuple2(product.isSet, maybeColor);
-					if (_v0.a) {
-						return A2(
-							$elm$html$Html$img,
+							imageElement,
+							A2(
+							$elm$html$Html$button,
 							_List_fromArray(
 								[
-									$elm$html$Html$Attributes$class('slide-image'),
-									$elm$html$Html$Attributes$src(
-									A2($elm$core$Maybe$withDefault, '', product.setImageUrl))
+									$elm$html$Html$Events$onClick($author$project$Components$Slide$ToggleInner),
+									$elm$html$Html$Attributes$class('slide-toggle')
 								]),
-							_List_Nil);
-					} else {
-						if (_v0.b.$ === 'Just') {
-							var color = _v0.b.a;
-							return A2(
-								$elm$html$Html$div,
+							_List_fromArray(
+								[
+									$elm$html$Html$text('⟳')
+								]))
+						])),
+					A2(
+					$elm$html$Html$div,
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$class('slide-content')
+						]),
+					_Utils_ap(
+						product.isNew ? _List_fromArray(
+							[
+								A2(
+								$elm$html$Html$span,
 								_List_fromArray(
 									[
-										$elm$html$Html$Attributes$class('image-switcher')
+										$elm$html$Html$Attributes$class('badge')
 									]),
 								_List_fromArray(
 									[
-										A2(
-										$elm$html$Html$img,
-										_List_fromArray(
-											[
-												$elm$html$Html$Attributes$src(color.outerUrl),
-												$elm$html$Html$Attributes$class('slide-image')
-											]),
-										_List_Nil),
-										A2(
-										$elm$html$Html$button,
-										_List_fromArray(
-											[
-												$elm$html$Html$Events$onClick($author$project$Components$Slide$ToggleInner),
-												$elm$html$Html$Attributes$class('small-btn')
-											]),
-										_List_fromArray(
-											[
-												$elm$html$Html$text('Switch view')
-											]))
-									]));
-						} else {
-							return $elm$html$Html$text('No image!');
-						}
-					}
-				}(),
-					(!product.isSet) ? A2(
-					$elm$html$Html$div,
-					_List_fromArray(
-						[
-							$elm$html$Html$Attributes$class('color-swatches')
-						]),
-					A2(
-						$elm$core$List$indexedMap,
-						F2(
-							function (i, c) {
-								return A2(
+										$elm$html$Html$text('New')
+									]))
+							]) : _List_Nil,
+						_Utils_ap(
+							product.isSet ? _List_fromArray(
+								[
+									A2(
 									$elm$html$Html$span,
 									_List_fromArray(
 										[
-											$elm$html$Html$Attributes$class(
-											'swatch' + (_Utils_eq(i, selectedColorIndex) ? ' selected' : '')),
-											$elm$html$Html$Events$onClick(
-											$author$project$Components$Slide$SelectColor(i))
+											$elm$html$Html$Attributes$class('badge')
 										]),
-									_Utils_ap(
+									_List_fromArray(
+										[
+											$elm$html$Html$text('Set')
+										]))
+								]) : _List_Nil,
+							_Utils_ap(
+								_List_fromArray(
+									[
+										A2(
+										$elm$html$Html$div,
 										_List_fromArray(
 											[
-												$elm$html$Html$text(c.name)
+												$elm$html$Html$Attributes$class('slide-title')
 											]),
-										c.isNew ? _List_fromArray(
+										_List_fromArray(
 											[
-												badge('New')
-											]) : _List_Nil));
-							}),
-						product.colors)) : $elm$html$Html$text(''),
-					A2(
-					$elm$html$Html$div,
-					_List_fromArray(
-						[
-							$elm$html$Html$Attributes$class('slide-desc')
-						]),
-					_List_fromArray(
-						[
-							$elm$html$Html$text(product.description)
-						]))
+												$elm$html$Html$text(product.title)
+											])),
+										A2(
+										$elm$html$Html$div,
+										_List_fromArray(
+											[
+												$elm$html$Html$Attributes$class('slide-price')
+											]),
+										_List_fromArray(
+											[
+												$elm$html$Html$text(
+												'$' + $elm$core$String$fromFloat(product.price))
+											]))
+									]),
+								_Utils_ap(
+									(!product.isSet) ? _List_fromArray(
+										[
+											A2(
+											$elm$html$Html$div,
+											_List_fromArray(
+												[
+													$elm$html$Html$Attributes$class('color-swatches')
+												]),
+											A2(
+												$elm$core$List$indexedMap,
+												F2(
+													function (i, c) {
+														return A2(
+															$elm$html$Html$span,
+															_List_fromArray(
+																[
+																	$elm$html$Html$Attributes$class(
+																	'swatch' + ((!i) ? ' selected' : '')),
+																	$elm$html$Html$Events$onClick(
+																	$author$project$Components$Slide$SelectColor(i))
+																]),
+															_Utils_ap(
+																_List_fromArray(
+																	[
+																		$elm$html$Html$text(c.name)
+																	]),
+																c.isNew ? _List_fromArray(
+																	[
+																		A2(
+																		$elm$html$Html$span,
+																		_List_fromArray(
+																			[
+																				$elm$html$Html$Attributes$class('badge')
+																			]),
+																		_List_fromArray(
+																			[
+																				$elm$html$Html$text('New')
+																			]))
+																	]) : _List_Nil));
+													}),
+												product.colors))
+										]) : _List_Nil,
+									_List_fromArray(
+										[
+											A2(
+											$elm$html$Html$div,
+											_List_fromArray(
+												[
+													$elm$html$Html$Attributes$class('slide-desc')
+												]),
+											_List_fromArray(
+												[
+													$elm$html$Html$text(product.description)
+												]))
+										]))))))
 				]));
 	});
 var $author$project$Components$Slider$view = function (model) {
-	var count = $elm$core$List$length(model.slides);
-	var wrap = function (idx) {
-		return (idx < 0) ? (count - 1) : ((_Utils_cmp(idx, count) > -1) ? 0 : idx);
-	};
-	var indices = _List_fromArray(
-		[
-			wrap(model.currentIndex - 1),
-			model.currentIndex,
-			wrap(model.currentIndex + 1)
-		]);
-	var visibleSlides = A2(
-		$elm$core$List$filterMap,
-		function (i) {
-			return $elm$core$List$head(
-				A2($elm$core$List$drop, i, model.slides));
-		},
-		indices);
+	var visibleSlides = A2($elm$core$List$drop, model.currentIndex, model.slides);
+	var indices = A2(
+		$elm$core$List$range,
+		0,
+		$elm$core$List$length(visibleSlides) - 1);
 	var slidesWithIdx = A3(
 		$elm$core$List$map2,
 		F2(
@@ -5508,10 +5561,15 @@ var $author$project$Components$Slider$view = function (model) {
 					function (_v0) {
 						var product = _v0.a;
 						var idx = _v0.b;
+						var isInner = A2(
+							$elm$core$Maybe$withDefault,
+							false,
+							$elm$core$List$head(
+								A2($elm$core$List$drop, idx, model.innerStates)));
 						return A2(
 							$elm$html$Html$map,
 							$author$project$Components$Slider$SlideMsgAt(idx),
-							A2($author$project$Components$Slide$view, idx, product));
+							A3($author$project$Components$Slide$view, isInner, idx, product));
 					},
 					slidesWithIdx)),
 				A2(
@@ -5529,11 +5587,7 @@ var $author$project$Components$Slider$view = function (model) {
 };
 var $author$project$Main$main = $elm$browser$Browser$element(
 	{
-		init: function (flags) {
-			return _Utils_Tuple2(
-				{currentIndex: 0, slides: flags},
-				$elm$core$Platform$Cmd$none);
-		},
+		init: $author$project$Components$Slider$init,
 		subscriptions: function (_v0) {
 			return $elm$core$Platform$Sub$none;
 		},

@@ -1,0 +1,83 @@
+/* src/styles/slide.css */
+
+/* Card wrapper (each slide) */
+.slider-container .slide {
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  /* Image wrapper & hover toggle */
+  .slider-container .slide-image-wrapper {
+    position: relative;
+  }
+  .slider-container .slide-image-wrapper .slide-image {
+    width: 100%;
+    max-width: 400px;
+    display: block;
+    object-fit: contain;
+  }
+  .slider-container .slide-image-wrapper .slide-toggle {
+    position: absolute;
+    top: .5rem;
+    right: .5rem;
+    background: rgba(0,0,0,0.6);
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 2rem;
+    height: 2rem;
+    font-size: 1rem;
+    opacity: 0;
+    cursor: pointer;
+    transition: opacity .2s ease;
+  }
+  .slider-container .slide-image-wrapper:hover .slide-toggle {
+    opacity: 1;
+  }
+  
+  /* Text content below */
+  .slider-container .slide-content {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+  }
+  
+  /* Badges */
+  .slider-container .slide-content .badge {
+    background: #6b00e6;
+    color: #fff;
+    font-size: .75rem;
+    padding: .2rem .4rem;
+    border-radius: 2px;
+    align-self: flex-start;
+  }
+  
+  /* Titles & prices */
+  .slider-container .slide-content .slide-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #222;
+    margin: 0;
+  }
+  .slider-container .slide-content .slide-price {
+    font-size: .9rem;
+    color: #555;
+    margin: 0;
+  }
+  
+  /* Swatches & description */
+  .slider-container .slide-content .color-swatches {
+    display: flex;
+    gap: .5rem;
+  }
+  .slider-container .slide-content .slide-desc {
+    font-size: .85rem;
+    color: #666;
+    margin-top: auto;
+  }
+  

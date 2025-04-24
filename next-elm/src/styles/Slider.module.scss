@@ -1,56 +1,29 @@
-// Slider.module.scss
+// /* Slider.module.scss */
 
-.sliderRoot {                             /* ← your local “hook” so file stays “pure” */
-    :global(.slider-container) {
-      position: relative;
-      padding: 2rem 1rem;
-      overflow: hidden;
-    }
+// .sliderRoot {
+//     :global(.slider-container) {
+//       position: relative;
+//       padding: 2rem 1rem;
+//       overflow: hidden;
+//     }
   
-    :global(.slides-wrapper) {
-      display: flex;
-      gap: 1.5rem;
-      scroll-snap-type: x mandatory;
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-    }
+//     :global(.slides-wrapper) {
+//       display: flex;
+//       gap: 1.5rem;
+//       overflow-x: auto;
+//       scroll-snap-type: x mandatory;
+//     }
   
-    /* ← FIXED: removed extra “)” here */
-    :global(.slides-wrapper) > * {
-      flex: 0 0 calc((100% - 1.5rem * 2) / 3);
-      scroll-snap-align: start;
-    }
+//     :global(.slides-wrapper) > * {
+//       flex: 0 0 calc((100% - 1.5rem * 2) / 3);
+//       scroll-snap-align: start;
+//     }
   
-    :global(.nav-button) {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      background: rgba(255,255,255,0.9);
-      border: none;
-      width: 2rem;
-      height: 2rem;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      color: #444;
-      font-size: 1rem;
-      z-index: 10;
-    }
-  
-    :global(.slider-container) .nav-button:first-of-type {
-      left: 1rem;
-    }
-  
-    :global(.slider-container) .nav-button:last-of-type {
-      right: 1rem;
-    }
-  
-    @media (max-width: 768px) {
-      :global(.slides-wrapper) > * {
-        flex: 0 0 100%;
-      }
-    }
-  }
+//     :global(.nav-button) {
+//       position: absolute;
+//       top: 50%;
+//       transform: translateY(-50%);
+//       /* …your arrow styles… */
+//     }
+//   }
   

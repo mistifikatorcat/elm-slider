@@ -3,10 +3,10 @@ module Components.Slider exposing (Model, Msg(..), init, update, view)
 import Html exposing (Html, button, div, text)
 import Html.Attributes exposing (class)
 import Html.Events exposing (onClick)
-import Config.Products exposing (Product)
-import Components.Slide as Slide exposing (SlideMsg, view)
-
-import List exposing (drop, filterMap, head, length, map2)
+import Config.Products exposing (Product, Flags)
+import Components.Slide as Slide exposing (SlideMsg)
+import List exposing (drop, head, indexedMap, length, map2, range)
+import Maybe exposing (withDefault)
 
 
 -- MODEL
@@ -14,16 +14,20 @@ import List exposing (drop, filterMap, head, length, map2)
 type alias Model =
     { slides       : List Product
     , currentIndex : Int
+    , innerStates  : List Bool
     }
 
-init : Model
-init =
-    { slides       = []
-    , currentIndex = 0
-    }
+init : Flags -> ( Model, Cmd Msg )
+init flags =
+    ( { slides       = flags
+      , currentIndex = 0
+      , innerStates  = List.repeat (List.length flags) False
+      }
+    , Cmd.none
+    )
 
 
--- UPDATE
+-- MESSAGES
 
 type Msg
     = Prev
@@ -31,19 +35,21 @@ type Msg
     | SlideMsgAt Int SlideMsg
 
 
+-- UPDATE
+
 update : Msg -> Model -> Model
 update msg model =
     let
-        count =
-            length model.slides
-
         wrap idx =
             if idx < 0 then
-                count - 1
-            else if idx >= count then
+                List.length model.slides - 1
+            else if idx >= List.length model.slides then
                 0
             else
                 idx
+
+        toggleAt idx =
+            indexedMap (\i b -> if i == idx then not b else b) model.innerStates
     in
     case msg of
         Prev ->
@@ -52,9 +58,14 @@ update msg model =
         Next ->
             { model | currentIndex = wrap (model.currentIndex + 1) }
 
-        SlideMsgAt _ _ ->
-            -- TODO: handle per‐slide interaction (e.g. color changes)
-            model
+        SlideMsgAt idx slideMsg ->
+            case slideMsg of
+                Slide.ToggleInner ->
+                    { model | innerStates = toggleAt idx }
+
+                Slide.SelectColor _ ->
+                    -- you can handle color selection here if desired
+                    model
 
 
 -- VIEW
@@ -62,29 +73,12 @@ update msg model =
 view : Model -> Html Msg
 view model =
     let
-        count =
-            length model.slides
-
-        wrap idx =
-            if idx < 0 then
-                count - 1
-            else if idx >= count then
-                0
-            else
-                idx
-
-        -- pick the three slide indices
-        indices =
-            [ wrap (model.currentIndex - 1)
-            , model.currentIndex
-            , wrap (model.currentIndex + 1)
-            ]
-
-        -- pull those products out
         visibleSlides =
-            filterMap (\i -> head (drop i model.slides)) indices
+            drop model.currentIndex model.slides
 
-        -- pair each product with its original index
+        indices =
+            range 0 (List.length visibleSlides - 1)
+
         slidesWithIdx =
             map2 (\product idx -> ( product, idx )) visibleSlides indices
     in
@@ -93,8 +87,13 @@ view model =
         , div [ class "slides-wrapper" ]
             (List.map
                 (\( product, idx ) ->
-                    Html.map (SlideMsgAt idx) (Slide.view idx product)
-
+                    let
+                        isInner =
+                            head (List.drop idx model.innerStates)
+                                |> withDefault False
+                    in
+                    Html.map (SlideMsgAt idx)
+                        (Slide.view isInner idx product)
                 )
                 slidesWithIdx
             )
