@@ -1,5 +1,6 @@
 module Components.Slider exposing (Model, Msg(..), init, update, view, subscriptions)
 
+import Browser.Dom exposing (getViewport)
 import Browser.Events exposing (onResize)
 import Html exposing (Html, button, div, text)
 import Html.Attributes exposing (class, classList)
@@ -10,6 +11,8 @@ import List exposing (drop, head, indexedMap, length, map, maximum, take)
 import Maybe exposing (withDefault)
 import Platform.Cmd as Cmd
 import Platform.Sub as Sub
+import Task exposing (attempt)
+import String exposing (fromFloat)
 
 
 -- MODEL
@@ -23,16 +26,34 @@ type alias Model =
     }
 
 
+-- INIT
+
 init : Flags -> ( Model, Cmd.Cmd Msg )
 init flags =
-    let n = List.length flags in
-    ( { slides         = flags
-      , currentIndex   = 0
-      , innerStates    = List.repeat n False
-      , selectedColors = List.repeat n 0
-      , viewportWidth  = 0
-      }
-    , Cmd.none
+    let
+        n =
+            List.length flags
+
+        baseModel =
+            { slides         = flags
+            , currentIndex   = 0
+            , innerStates    = List.repeat n False
+            , selectedColors = List.repeat n 0
+            , viewportWidth  = 0
+            }
+    in
+    ( baseModel
+    , attempt
+        (\result ->
+            case result of
+                Ok vp ->
+                    -- vp.viewport.width & .height are Floats in this Elm version
+                    WindowResized vp.viewport.width vp.viewport.height
+
+                Err _ ->
+                    WindowResized 0 0
+        )
+        getViewport
     )
 
 
@@ -42,14 +63,15 @@ type Msg
     = Prev
     | Next
     | SlideMsgAt Int SlideMsg
-    | WindowResized { width : Float, height : Float }
+    | WindowResized Float Float
 
 
 -- SUBSCRIPTIONS
 
 subscriptions : Model -> Sub Msg
 subscriptions _ =
-    onResize (\w h -> WindowResized { width = toFloat w, height = toFloat h })
+    -- onResize gives Int Int, convert to Float Float
+    onResize (\w h -> WindowResized (toFloat w) (toFloat h))
 
 
 -- UPDATE
@@ -57,8 +79,8 @@ subscriptions _ =
 update : Msg -> Model -> ( Model, Cmd.Cmd Msg )
 update msg model =
     case msg of
-        WindowResized vp ->
-            ( { model | viewportWidth = vp.width }, Cmd.none )
+        WindowResized w _ ->
+            ( { model | viewportWidth = w }, Cmd.none )
 
         Prev ->
             let
@@ -126,21 +148,21 @@ view model =
             ]
             [ text "<" ]
 
-          -- The slide track
+          -- Grid of slides
         , div [ class "slides-wrapper" ]
-            (slidesWithIdx
-                |> List.map
-                    (\( product, idx ) ->
-                        let
-                            isInner  =
-                                head (drop idx model.innerStates) |> withDefault False
+            (List.map
+                (\( product, idx ) ->
+                    let
+                        isInner =
+                            head (drop idx model.innerStates) |> withDefault False
 
-                            selIdx   =
-                                head (drop idx model.selectedColors) |> withDefault 0
-                        in
-                        Html.map (SlideMsgAt idx)
-                            (Slide.view isInner selIdx maxSwatches idx product)
-                    )
+                        selIdx =
+                            head (drop idx model.selectedColors) |> withDefault 0
+                    in
+                    Html.map (SlideMsgAt idx)
+                        (Slide.view isInner selIdx maxSwatches idx product)
+                )
+                slidesWithIdx
             )
 
           -- Right arrow
@@ -152,8 +174,9 @@ view model =
         ]
 
 
--- HELPER
+-- HELPERS
 
+{-| How many cards to show based on a Float width -}
 visibleCount : Float -> Int
 visibleCount w =
     if w <= 600 then

@@ -5163,8 +5163,35 @@ var $elm$core$Task$perform = F2(
 var $elm$browser$Browser$element = _Browser_element;
 var $elm$json$Json$Decode$field = _Json_decodeField;
 var $elm$json$Json$Decode$float = _Json_decodeFloat;
-var $elm$core$Platform$Cmd$batch = _Platform_batch;
-var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
+var $author$project$Components$Slider$WindowResized = F2(
+	function (a, b) {
+		return {$: 'WindowResized', a: a, b: b};
+	});
+var $elm$core$Basics$composeL = F3(
+	function (g, f, x) {
+		return g(
+			f(x));
+	});
+var $elm$core$Task$onError = _Scheduler_onError;
+var $elm$core$Task$attempt = F2(
+	function (resultToMessage, task) {
+		return $elm$core$Task$command(
+			$elm$core$Task$Perform(
+				A2(
+					$elm$core$Task$onError,
+					A2(
+						$elm$core$Basics$composeL,
+						A2($elm$core$Basics$composeL, $elm$core$Task$succeed, resultToMessage),
+						$elm$core$Result$Err),
+					A2(
+						$elm$core$Task$andThen,
+						A2(
+							$elm$core$Basics$composeL,
+							A2($elm$core$Basics$composeL, $elm$core$Task$succeed, resultToMessage),
+							$elm$core$Result$Ok),
+						task))));
+	});
+var $elm$browser$Browser$Dom$getViewport = _Browser_withWindow(_Browser_getViewport);
 var $elm$core$List$repeatHelp = F3(
 	function (result, n, value) {
 		repeatHelp:
@@ -5188,23 +5215,31 @@ var $elm$core$List$repeat = F2(
 	});
 var $author$project$Components$Slider$init = function (flags) {
 	var n = $elm$core$List$length(flags);
+	var baseModel = {
+		currentIndex: 0,
+		innerStates: A2($elm$core$List$repeat, n, false),
+		selectedColors: A2($elm$core$List$repeat, n, 0),
+		slides: flags,
+		viewportWidth: 0
+	};
 	return _Utils_Tuple2(
-		{
-			currentIndex: 0,
-			innerStates: A2($elm$core$List$repeat, n, false),
-			selectedColors: A2($elm$core$List$repeat, n, 0),
-			slides: flags,
-			viewportWidth: 0
-		},
-		$elm$core$Platform$Cmd$none);
+		baseModel,
+		A2(
+			$elm$core$Task$attempt,
+			function (result) {
+				if (result.$ === 'Ok') {
+					var vp = result.a;
+					return A2($author$project$Components$Slider$WindowResized, vp.viewport.width, vp.viewport.height);
+				} else {
+					return A2($author$project$Components$Slider$WindowResized, 0, 0);
+				}
+			},
+			$elm$browser$Browser$Dom$getViewport));
 };
 var $elm$json$Json$Decode$list = _Json_decodeList;
 var $elm$json$Json$Decode$null = _Json_decodeNull;
 var $elm$json$Json$Decode$oneOf = _Json_oneOf;
 var $elm$json$Json$Decode$string = _Json_decodeString;
-var $author$project$Components$Slider$WindowResized = function (a) {
-	return {$: 'WindowResized', a: a};
-};
 var $elm$browser$Browser$Events$Window = {$: 'Window'};
 var $elm$json$Json$Decode$int = _Json_decodeInt;
 var $elm$browser$Browser$Events$MySub = F3(
@@ -5624,14 +5659,15 @@ var $author$project$Components$Slider$subscriptions = function (_v0) {
 	return $elm$browser$Browser$Events$onResize(
 		F2(
 			function (w, h) {
-				return $author$project$Components$Slider$WindowResized(
-					{height: h, width: w});
+				return A2($author$project$Components$Slider$WindowResized, w, h);
 			}));
 };
 var $elm$core$Basics$min = F2(
 	function (x, y) {
 		return (_Utils_cmp(x, y) < 0) ? x : y;
 	});
+var $elm$core$Platform$Cmd$batch = _Platform_batch;
+var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $elm$core$Basics$not = _Basics_not;
 var $author$project$Components$Slider$visibleCount = function (w) {
 	return (w <= 600) ? 1 : ((w <= 900) ? 2 : 3);
@@ -5640,11 +5676,11 @@ var $author$project$Components$Slider$update = F2(
 	function (msg, model) {
 		switch (msg.$) {
 			case 'WindowResized':
-				var vp = msg.a;
+				var w = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{viewportWidth: vp.width}),
+						{viewportWidth: w}),
 					$elm$core$Platform$Cmd$none);
 			case 'Prev':
 				var vc = $author$project$Components$Slider$visibleCount(model.viewportWidth);
