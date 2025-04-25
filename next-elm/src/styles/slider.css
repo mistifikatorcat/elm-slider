@@ -16,6 +16,14 @@
   .slider-container::-webkit-scrollbar {
     display: none;
   }
+
+  .slider-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 2rem 0;
+  }
+  
   
   /* Grid track: always 3 slides per view */
   .slides-wrapper {
@@ -41,6 +49,14 @@
     /* explicitly reset both sides */
     left: auto;
     right: auto;
+  }
+
+  .nav-button {
+    background: none;
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
+    user-select: none;
   }
   
   /* Now pin them where we want */
