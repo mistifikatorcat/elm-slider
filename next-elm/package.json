@@ -21,7 +21,6 @@
     "concurrently": "^9.1.2",
     "elm": "^0.19.1-6",
     "elm-live": "^4.0.2",
-    "sass": "^1.87.0",
     "typescript": "^5"
   }
 }
