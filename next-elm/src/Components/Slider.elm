@@ -1,13 +1,15 @@
-module Components.Slider exposing (Model, Msg(..), init, update, view)
+module Components.Slider exposing (Model, Msg(..), init, update, view, subscriptions)
 
+import Browser.Events exposing (onResize)
 import Html exposing (Html, button, div, text)
-import Html.Attributes exposing (class)
+import Html.Attributes exposing (class, classList)
 import Html.Events exposing (onClick)
-import Config.Products exposing (Product, Flags)
+import Config.Products exposing (Flags, Product)
 import Components.Slide as Slide exposing (SlideMsg)
 import List exposing (drop, head, indexedMap, length, map, maximum, take)
 import Maybe exposing (withDefault)
 import Platform.Cmd as Cmd
+import Platform.Sub as Sub
 
 
 -- MODEL
@@ -17,19 +19,18 @@ type alias Model =
     , currentIndex   : Int
     , innerStates    : List Bool
     , selectedColors : List Int
+    , viewportWidth  : Float
     }
 
 
 init : Flags -> ( Model, Cmd.Cmd Msg )
 init flags =
-    let
-        n =
-            List.length flags
-    in
+    let n = List.length flags in
     ( { slides         = flags
       , currentIndex   = 0
       , innerStates    = List.repeat n False
       , selectedColors = List.repeat n 0
+      , viewportWidth  = 0
       }
     , Cmd.none
     )
@@ -41,42 +42,56 @@ type Msg
     = Prev
     | Next
     | SlideMsgAt Int SlideMsg
+    | WindowResized { width : Float, height : Float }
+
+
+-- SUBSCRIPTIONS
+
+subscriptions : Model -> Sub Msg
+subscriptions _ =
+    onResize (\w h -> WindowResized { width = toFloat w, height = toFloat h })
 
 
 -- UPDATE
 
-update : Msg -> Model -> Model
+update : Msg -> Model -> ( Model, Cmd.Cmd Msg )
 update msg model =
-    let
-        total        = List.length model.slides
-        visibleCount = 3
-
-        clampPrev =
-            max 0 (model.currentIndex - 1)
-
-        clampNext =
-            min (total - visibleCount) (model.currentIndex + 1)
-
-        toggleAt idx =
-            List.indexedMap (\i b -> if i == idx then not b else b) model.innerStates
-
-        selectAt idx choice =
-            List.indexedMap (\i c -> if i == idx then choice else c) model.selectedColors
-    in
     case msg of
+        WindowResized vp ->
+            ( { model | viewportWidth = vp.width }, Cmd.none )
+
         Prev ->
-            { model | currentIndex = clampPrev }
+            let
+                vc        = visibleCount model.viewportWidth
+                clampPrev = max 0 (model.currentIndex - 1)
+            in
+            ( { model | currentIndex = clampPrev }, Cmd.none )
 
         Next ->
-            { model | currentIndex = clampNext }
+            let
+                total  = List.length model.slides
+                vc     = visibleCount model.viewportWidth
+                clampN = min (total - vc) (model.currentIndex + 1)
+            in
+            ( { model | currentIndex = clampN }, Cmd.none )
 
         SlideMsgAt idx slideMsg ->
             case slideMsg of
                 Slide.ToggleInner ->
-                    { model | innerStates = toggleAt idx }
+                    ( { model
+                        | innerStates =
+                            List.indexedMap (\i b -> if i == idx then not b else b) model.innerStates
+                      }
+                    , Cmd.none
+                    )
 
                 Slide.SelectColor choice ->
-                    { model | selectedColors = selectAt idx choice }
+                    ( { model
+                        | selectedColors =
+                            List.indexedMap (\i c -> if i == idx then choice else c) model.selectedColors
+                      }
+                    , Cmd.none
+                    )
 
 
 -- VIEW
@@ -84,56 +99,66 @@ update msg model =
 view : Model -> Html Msg
 view model =
     let
-        total        = List.length model.slides
-        visibleCount = 3
+        total       = List.length model.slides
+        vc          = visibleCount model.viewportWidth
 
-        maxSwatches : Int
+        canPrev     = model.currentIndex > 0
+        canNext     = model.currentIndex + vc < total
+
         maxSwatches =
             model.slides
                 |> map .colors
-                |> map length
+                |> map List.length
                 |> maximum
                 |> withDefault 0
 
-        canPrev =
-            model.currentIndex > 0
-
-        canNext =
-            model.currentIndex + visibleCount < total
-
-        visible =
-            List.take visibleCount (List.drop model.currentIndex model.slides)
+        visibleSlides =
+            take vc (drop model.currentIndex model.slides)
 
         slidesWithIdx =
-            List.indexedMap (\i p -> ( p, i + model.currentIndex )) visible
+            indexedMap (\i p -> ( p, i + model.currentIndex )) visibleSlides
     in
     div [ class "slider-container" ]
-        (  (if canPrev then
-                [ button [ onClick Prev, class "nav-button prev" ] [ text "<" ] ]
-            else
-                []
-           )
-        ++ [ div [ class "slides-wrapper" ]
-                (List.map
+        [ -- Left arrow
+          button
+            [ onClick Prev
+            , classList [ ( "nav-button", True ), ( "prev", True ), ( "hidden", not canPrev ) ]
+            ]
+            [ text "<" ]
+
+          -- The slide track
+        , div [ class "slides-wrapper" ]
+            (slidesWithIdx
+                |> List.map
                     (\( product, idx ) ->
                         let
-                            isInner =
-                                head (drop idx model.innerStates)
-                                    |> withDefault False
+                            isInner  =
+                                head (drop idx model.innerStates) |> withDefault False
 
-                            selectedIdx =
-                                head (drop idx model.selectedColors)
-                                    |> withDefault 0
+                            selIdx   =
+                                head (drop idx model.selectedColors) |> withDefault 0
                         in
                         Html.map (SlideMsgAt idx)
-                            (Slide.view isInner selectedIdx maxSwatches idx product)
+                            (Slide.view isInner selIdx maxSwatches idx product)
                     )
-                    slidesWithIdx
-                )
-           ]
-        ++ (if canNext then
-                [ button [ onClick Next, class "nav-button next" ] [ text ">" ] ]
-            else
-                []
-           )
-        )
+            )
+
+          -- Right arrow
+        , button
+            [ onClick Next
+            , classList [ ( "nav-button", True ), ( "next", True ), ( "hidden", not canNext ) ]
+            ]
+            [ text ">" ]
+        ]
+
+
+-- HELPER
+
+visibleCount : Float -> Int
+visibleCount w =
+    if w <= 600 then
+        1
+    else if w <= 900 then
+        2
+    else
+        3

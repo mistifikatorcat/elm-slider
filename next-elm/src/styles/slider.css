@@ -7,6 +7,7 @@
     scroll-behavior: smooth;
     scroll-snap-type: x mandatory;
     position: relative;
+    gap: 1rem;
   
     /* hide scrollbar */
     -ms-overflow-style: none;
@@ -22,7 +23,7 @@
     grid-auto-flow: column dense;
     gap: 0.25rem; 
 
-    grid-auto-columns: calc((100% - (0.5rem * 2)) / 3);
+    /* grid-auto-columns: calc((100% - (0.5rem * 2)) / 3); */
   }
   
   /* Snap each slide to the start of the viewport */
@@ -31,10 +32,11 @@
   }
   
   .slider-container .nav-button {
-    position: absolute;
+    /* position: absolute; */
     top: 50%;
     transform: translateY(-50%);
     z-index: 10;
+    padding: 1rem;
   
     /* explicitly reset both sides */
     left: auto;
@@ -45,13 +47,23 @@
   .slider-container .nav-button.prev {
     left: 10rem;   /* moves the Prev button 0.5rem outside on the left */
   }
+
+  .nav-button.prev.hidden{
+    visibility: hidden;
+  }
+
+  .nav-button.next.hidden{
+    visibility: hidden;
+  
+  }
+  
   
   .slider-container .nav-button.next {
     right: 10rem;  /* moves the Next button 0.5rem outside on the right */
   }
-  @media (max-width: 768px) {
-    .slides-wrapper > * {
-      flex: 0 0 100%;
-    }
-  }
+  
+
+
+
+
   
